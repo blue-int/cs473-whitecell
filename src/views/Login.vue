@@ -1,7 +1,7 @@
 <template>
   <div>
-    <button @click="googleLogin()">login</button>
-    <button @click="signOut()">logout</button>
+    <div>Please Login</div>
+    <button @click="googleLogin()">Google Login</button>
   </div>
 </template>
 
@@ -11,26 +11,13 @@ import firebase from 'firebase/app'
 export default {
   name: 'Login',
   data() {
-    return {
-      email: ''
-    }
+    return {}
   },
   methods: {
     async googleLogin() {
       const provider = new firebase.auth.GoogleAuthProvider()
       try {
-        console.log(provider)
-        const result = await firebase.auth().signInWithPopup(provider)
-        console.log(result.user)
-        alert(`hello, ${result.user.displayName}!`)
-        this.$router.push('/')
-      } catch (e) {
-        console.log(e)
-      }
-    },
-    async signOut() {
-      try {
-        await firebase.auth().signOut()
+        await firebase.auth().signInWithPopup(provider)
         this.$router.push('/')
       } catch (e) {
         console.log(e)

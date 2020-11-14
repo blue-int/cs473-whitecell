@@ -2,12 +2,37 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <router-link to="/login">Login</router-link>
+      <span v-if="currentUser != null">
+        |
+        <button @click="signOut()">Sign Out</button>
+      </span>
     </div>
-    <router-view />
+    <router-view :key="$route.fullPath" />
   </div>
 </template>
 
+<script>
+import firebase from 'firebase/app'
+export default {
+  name: 'App',
+  data() {
+    return {
+      currentUser: firebase.auth().currentUser
+    }
+  },
+  methods: {
+    async signOut() {
+      try {
+        await firebase.auth().signOut()
+        this.$router.push('/login')
+      } catch (e) {
+        console.log(e)
+      }
+    }
+  }
+}
+</script>
 <style lang="scss">
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
