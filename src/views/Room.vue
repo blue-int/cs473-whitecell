@@ -1,6 +1,7 @@
 <template>
   <div>
-    Room {{ $route.params.id }}
+    <router-link to="/lobby">Lobby</router-link>
+    <div>Room {{ $route.params.id }}</div>
     <div>{{ title }}</div>
     <div>{{ master }}</div>
   </div>

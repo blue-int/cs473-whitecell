@@ -2,13 +2,9 @@
   <div class="lobby">
     <button @click="newRoom()">Make a new room</button>
     <div>
-      <div v-for="room in roomList" :key="room.id">
+      <div v-for="room in roomList" :key="room.id" @click="enterRoom(room)">
         {{ room.title }} {{ room.master }}
-        {{ room.timeCreated.toDate().getMonth() }} /
-        {{ room.timeCreated.toDate().getDate() }}
-        {{ room.timeCreated.toDate().getHours() }} :
-        {{ room.timeCreated.toDate().getMinutes() }} :
-        {{ room.timeCreated.toDate().getSeconds() }}
+        {{ toTime(room) }}
       </div>
     </div>
   </div>
@@ -30,10 +26,14 @@ export default {
         .collection('lobby')
         .orderBy('timeCreated', 'desc')
         .onSnapshot(snapshot => {
+          const tempList = []
           snapshot.forEach(doc => {
-            this.roomList.push(doc.data())
-            console.log(doc.data().timeCreated.toDate())
+            tempList.push({
+              id: doc.id,
+              ...doc.data()
+            })
           })
+          this.roomList = tempList
         })
     } catch (e) {
       console.log(e)
@@ -51,6 +51,15 @@ export default {
         this.$router.push(`/lobby/${docRef.id}`)
       } catch (e) {
         console.log(e)
+      }
+    },
+    enterRoom(room) {
+      this.$router.push(`/lobby/${room.id}`)
+    },
+    toTime(room) {
+      if (room.timeCreated !== null) {
+        const date = room.timeCreated.toDate()
+        return `${date.getMonth()}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
       }
     }
   }

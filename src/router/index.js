@@ -30,7 +30,14 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: Login
+    component: Login,
+    beforeEnter: (to, from, next) => {
+      if (firebase.auth().currentUser !== null) {
+        next('/')
+      } else {
+        next()
+      }
+    }
   },
   {
     path: '/lobby',
