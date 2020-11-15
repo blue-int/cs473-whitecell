@@ -4,16 +4,28 @@
     <div>Room {{ $route.params.id }}</div>
     <div>{{ title }}</div>
     <div>{{ master }}</div>
-    <ChatRoom />
+    <vue-plyr>
+      <div class="plyr__video-embed">
+        <iframe
+          src="https://www.youtube.com/embed/bTqVqk7FSmY?amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1"
+          allowfullscreen
+          allowtransparency
+          allow="autoplay"
+        ></iframe>
+      </div>
+    </vue-plyr>
+    <ChatBox />
   </div>
 </template>
 
 <script>
 import { db } from '@/components/firebaseInit'
-import ChatRoom from '@/components/ChatRoom'
+import ChatBox from '@/components/ChatBox'
 export default {
   name: 'Room',
-  components: ChatRoom,
+  components: {
+    ChatBox
+  },
   data() {
     return {
       title: '',

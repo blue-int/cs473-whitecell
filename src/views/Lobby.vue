@@ -20,20 +20,17 @@ export default {
       roomList: []
     }
   },
-  async created() {
+  created() {
     try {
-      await db
-        .collection('lobby')
+      db.collection('lobby')
         .orderBy('timeCreated', 'desc')
         .onSnapshot(snapshot => {
-          const tempList = []
-          snapshot.forEach(doc => {
-            tempList.push({
+          this.roomList = snapshot.docs.map(doc => {
+            return {
               id: doc.id,
               ...doc.data()
-            })
+            }
           })
-          this.roomList = tempList
         })
     } catch (e) {
       console.log(e)
