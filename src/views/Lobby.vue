@@ -59,7 +59,8 @@ export default {
     toTime(room) {
       if (room.timeCreated !== null) {
         const date = room.timeCreated.toDate()
-        return `${date.getMonth()}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+        return `${date.getMonth() +
+          1}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
       }
     }
   }

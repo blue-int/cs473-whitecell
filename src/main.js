@@ -16,7 +16,6 @@ const createApp = () => {
       store,
       render: h => h(App)
     }).$mount('#app')
-    // a.component('test')
   }
 }
 
