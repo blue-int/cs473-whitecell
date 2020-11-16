@@ -4,16 +4,21 @@
     <div v-for="chat in chatList" :key="chat.id">
       {{ chat.displayName }}: {{ chat.msg }}
     </div>
+    <input v-model="text" placeholder="chat" />
+    <button @click="send()">send</button>
   </div>
 </template>
 
 <script>
 import { db } from '@/components/firebaseInit'
+import firebase from 'firebase/app'
 export default {
   name: 'ChatBox',
   data() {
     return {
-      chatList: []
+      chatList: [],
+      text: '',
+      currentUser: firebase.auth().currentUser
     }
   },
   created() {
@@ -25,14 +30,28 @@ export default {
           return { id: doc.id, ...doc.data() }
         })
       })
-    // test code
-    // for (let i = 0; i < 100; i++) {
-    //   this.chatList.push({
-    //     id: i,
-    //     displayName: 'BLUE',
-    //     msg: 'hiiiiiiiiiii'
-    //   })
-    // }
+    /*
+       test code
+    for (let i = 0; i < 100; i++) {
+      this.chatList.push({
+        id: i,
+        displayName: 'BLUE',
+        msg: 'hiiiiiiiiiii'
+      })
+    }*/
+  },
+  methods: {
+    send() {
+      this.chatList.push({
+        uid: this.currentUser.uid,
+        displayName: this.currentUser.displayName,
+        photoURL: this.currentUser.photoURL,
+        timeCreated: firebase.firestore.FieldValue.serverTimestamp(),
+        msg: this.text,
+        likes: 0
+      })
+      this.text = ''
+    }
   }
 }
 </script>
