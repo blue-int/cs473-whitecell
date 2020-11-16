@@ -15,6 +15,7 @@
       </div>
     </vue-plyr>
     <ChatBox />
+    <div>Viewers: {{ viewers }}</div>
   </div>
 </template>
 
@@ -29,7 +30,8 @@ export default {
   data() {
     return {
       title: '',
-      master: ''
+      master: '',
+      viewers: 0
     }
   },
   async created() {
@@ -43,6 +45,20 @@ export default {
     } else {
       this.title = doc.data().title
       this.master = doc.data().master
+    }
+  },
+  async updated() {
+    const doc = await db
+      .collection('lobby')
+      .doc(this.$route.params.id)
+      .get()
+    if (!doc.exists) {
+      alert('The room does not exists')
+      this.$router.push('/lobby')
+    } else {
+      this.title = doc.data().title
+      this.master = doc.data().master
+      this.viewers = doc.data().viewers.length
     }
   }
 }

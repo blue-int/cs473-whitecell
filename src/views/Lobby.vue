@@ -39,19 +39,60 @@ export default {
   methods: {
     async newRoom() {
       try {
-        const docRef = await db.collection('lobby').add({
+        var newRoom = {
           title: 'Hi everyone!',
           master: 'KST',
           timeCreated: firebase.firestore.FieldValue.serverTimestamp(),
-          viewers: 0
-        })
-        this.$router.push(`/lobby/${docRef.id}`)
+          viewers: []
+        }
+        await db.collection('lobby').add(newRoom)
+        self.enterRoom(newRoom)
       } catch (e) {
         console.log(e)
       }
     },
-    enterRoom(room) {
-      this.$router.push(`/lobby/${room.id}`)
+    async enterRoom(room) {
+      const curUser = firebase.auth().currentUser
+      if (curUser != null) {
+        let docRef = db.collection('lobby').doc(room.id)
+        await docRef
+          .get()
+          .then(function(doc) {
+            let viewers = doc.data().viewers
+            const insideUser = viewers.find(user => {
+              if (user.uid == curUser.uid) {
+                return true
+              }
+            })
+            if (insideUser != undefined) {
+              console.log('Already participating')
+              return
+            }
+
+            viewers.push({
+              name: curUser.displayName,
+              uid: curUser.uid,
+              photoURL: curUser.photoURL,
+              email: curUser.email
+            })
+            console.log(viewers)
+
+            const data = doc.data()
+            docRef.set({
+              title: data.title,
+              master: data.master,
+              timeCreated: data.timeCreated,
+              viewers: viewers
+            })
+          })
+          .catch(function(error) {
+            console.log('Error getting document:', error)
+          })
+        this.$router.push(`/lobby/${room.id}`)
+        console.log('Update done.')
+      } else {
+        alert('You are not logged in!')
+      }
     },
     toTime(room) {
       if (room.timeCreated !== null) {
