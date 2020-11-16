@@ -49,14 +49,16 @@ export default {
         let chatCollection = docRef.collection('pinnedChats')
 
         console.log('collection??')
-
+        let curUser = firebase.auth().currentUser
         let chatInfo = {
-          username: 'USERNAME FIELD',
-          photo: 'PHOTO FIELD',
-          time: 'TIME FIELD', // when this chat was typed?
-          chat: 'Hello, I am pinned chat! It is available only for debugging.',
-          importance: 100
+          uid: curUser.uid,
+          displayName: curUser.displayName,
+          photoURL: curUser.photoURL,
+          timeCreated: firebase.firestore.Timestamp.now(),
+          msg: 'Hello, I am pinned chat! It is available only for debugging.',
+          likes: 100
         }
+
         await chatCollection.doc('pinChat1').set(chatInfo)
         await chatCollection.doc('pinChat2').set(chatInfo)
         await chatCollection.doc('pinChat3').set(chatInfo)
@@ -68,7 +70,7 @@ export default {
     },
 
     enterRoom(room) {
-      const curUser = firebase.auth().currentUser
+      let curUser = firebase.auth().currentUser
       if (curUser != null) {
         let userInfo = {
           name: curUser.displayName,

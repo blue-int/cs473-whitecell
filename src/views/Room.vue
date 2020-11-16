@@ -3,7 +3,7 @@
     <router-link to="/lobby">Lobby</router-link>
     <div>Room {{ $route.params.id }}</div>
     <div>{{ title }}</div>
-    <div>{{ master }}</div>
+    <div>{{ master }}<br /></div>
     <button @click="stopStream()">Stop stream</button>
     <vue-plyr>
       <div class="plyr__video-embed">
@@ -32,7 +32,8 @@ export default {
     return {
       title: '',
       master: '',
-      viewers: 0
+      viewers: 0,
+      pinnedChats: []
     }
   },
   async created() {
@@ -59,7 +60,21 @@ export default {
     } else {
       this.title = doc.data().title
       this.master = doc.data().master
-      //this.viewers = doc.data().viewers.length
+      db.collection('lobby')
+        .doc(this.$route.params.id)
+        .collection('viewers')
+        .get()
+        .then(view_list => (this.viewers = view_list.size))
+      /*
+      db.collection('lobby')
+        .doc(this.$route.params.id)
+        .collection('pinnedChats')
+        .get()
+        .then(pinnedChats => {
+          console.log(pinnedChats)
+          this.pinnedChats = pinnedChats
+        })
+        */
     }
   },
   methods: {
