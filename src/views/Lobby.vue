@@ -39,55 +39,48 @@ export default {
   methods: {
     async newRoom() {
       try {
-        var newRoom = {
+        let newRoom = {
           title: 'Hi everyone!',
           master: 'KST',
           timeCreated: firebase.firestore.FieldValue.serverTimestamp(),
-          viewers: []
+          pinnableNum: 3 // The max. number of pinned chat
         }
-        await db.collection('lobby').add(newRoom)
-        self.enterRoom(newRoom)
+        let docRef = await db.collection('lobby').add(newRoom)
+        let chatCollection = docRef.collection('pinnedChats')
+
+        console.log('collection??')
+
+        let chatInfo = {
+          username: 'USERNAME FIELD',
+          photo: 'PHOTO FIELD',
+          time: 'TIME FIELD', // when this chat was typed?
+          chat: 'Hello, I am pinned chat! It is available only for debugging.',
+          importance: 100
+        }
+        await chatCollection.doc('pinChat1').set(chatInfo)
+        await chatCollection.doc('pinChat2').set(chatInfo)
+        await chatCollection.doc('pinChat3').set(chatInfo)
+        console.log(docRef.id)
+        this.enterRoom(docRef)
       } catch (e) {
         console.log(e)
       }
     },
-    async enterRoom(room) {
+
+    enterRoom(room) {
       const curUser = firebase.auth().currentUser
       if (curUser != null) {
-        let docRef = db.collection('lobby').doc(room.id)
-        await docRef
-          .get()
-          .then(function(doc) {
-            let viewers = doc.data().viewers
-            const insideUser = viewers.find(user => {
-              if (user.uid == curUser.uid) {
-                return true
-              }
-            })
-            if (insideUser != undefined) {
-              console.log('Already participating')
-              return
-            }
-
-            viewers.push({
-              name: curUser.displayName,
-              uid: curUser.uid,
-              photoURL: curUser.photoURL,
-              email: curUser.email
-            })
-            console.log(viewers)
-
-            const data = doc.data()
-            docRef.set({
-              title: data.title,
-              master: data.master,
-              timeCreated: data.timeCreated,
-              viewers: viewers
-            })
-          })
-          .catch(function(error) {
-            console.log('Error getting document:', error)
-          })
+        let userInfo = {
+          name: curUser.displayName,
+          uid: curUser.uid,
+          photoURL: curUser.photoURL,
+          email: curUser.email
+        }
+        let userRef = db
+          .collection('lobby')
+          .doc(room.id)
+          .collection('viewers')
+        userRef.doc(userInfo.uid).set(userInfo)
         this.$router.push(`/lobby/${room.id}`)
         console.log('Update done.')
       } else {

@@ -59,7 +59,7 @@ export default {
     } else {
       this.title = doc.data().title
       this.master = doc.data().master
-      this.viewers = doc.data().viewers.length
+      //this.viewers = doc.data().viewers.length
     }
   },
   methods: {
