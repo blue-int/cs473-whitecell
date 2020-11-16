@@ -1,6 +1,6 @@
 <template>
   <div class="lobby">
-    <button @click="newRoom()">Make a new room</button>
+    <button @click="newRoom()">Start a new stream</button>
     <div>
       <div v-for="room in roomList" :key="room.id" @click="enterRoom(room)">
         {{ room.title }} {{ room.master }}

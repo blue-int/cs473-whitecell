@@ -4,6 +4,7 @@
     <div>Room {{ $route.params.id }}</div>
     <div>{{ title }}</div>
     <div>{{ master }}</div>
+    <button @click="stopStream()">Stop stream</button>
     <vue-plyr>
       <div class="plyr__video-embed">
         <iframe
@@ -59,6 +60,14 @@ export default {
       this.title = doc.data().title
       this.master = doc.data().master
       this.viewers = doc.data().viewers.length
+    }
+  },
+  methods: {
+    stopStream() {
+      db.collection('lobby')
+        .doc(this.$route.params.id)
+        .delete()
+      this.$router.push('/lobby')
     }
   }
 }
