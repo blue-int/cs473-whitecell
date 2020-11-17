@@ -1,9 +1,17 @@
 <template>
-  <div v-if="currentUser != null" class="home">
-    <div>Welcome to Team WhiteCell!</div>
-    <div>Hello! {{ currentUser.displayName }}</div>
-    <button @click="$router.push('/lobby')">Enter Lobby</button>
-  </div>
+  <v-container v-if="currentUser != null" class="home">
+    <v-row>
+      <v-col align="center">Welcome to Team WhiteCell!</v-col>
+    </v-row>
+    <v-row>
+      <v-col align="center">Hello! {{ currentUser.displayName }}</v-col>
+    </v-row>
+    <v-row>
+      <v-col align="center">
+        <v-btn @click="$router.push('/lobby')">Enter Lobby</v-btn>
+      </v-col>
+    </v-row>
+  </v-container>
   <div v-else>
     You are not logged in!
   </div>

@@ -1,23 +1,31 @@
 <template>
-  <div>
-    <router-link to="/lobby">Lobby</router-link>
-    <div>Room {{ $route.params.id }}</div>
-    <div>{{ title }}</div>
-    <div>{{ master }}<br /></div>
-    <button @click="stopStream()">Stop stream</button>
-    <vue-plyr>
-      <div class="plyr__video-embed">
-        <iframe
-          src="https://www.youtube.com/embed/bTqVqk7FSmY?amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1"
-          allowfullscreen
-          allowtransparency
-          allow="autoplay"
-        ></iframe>
-      </div>
-    </vue-plyr>
+  <v-container>
+    <v-row>
+      <v-col>
+        <router-link to="/lobby">Lobby</router-link>
+        <div>Room {{ $route.params.id }}</div>
+        <div>{{ title }}</div>
+        <div>{{ master }}<br /></div>
+        <div>Viewers: {{ viewers }}</div>
+        <v-btn @click="stopStream()">Stop stream</v-btn>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <vue-plyr>
+          <div class="plyr__video-embed">
+            <iframe
+              src="https://www.youtube.com/embed/bTqVqk7FSmY?amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1"
+              allowfullscreen
+              allowtransparency
+              allow="autoplay"
+            ></iframe>
+          </div>
+        </vue-plyr>
+      </v-col>
+    </v-row>
     <ChatBox />
-    <div>Viewers: {{ viewers }}</div>
-  </div>
+  </v-container>
 </template>
 
 <script>

@@ -1,13 +1,33 @@
 <template>
-  <div class="lobby">
-    <button @click="newRoom()">Start a new stream</button>
-    <div>
-      <div v-for="room in roomList" :key="room.id" @click="enterRoom(room)">
-        {{ room.title }} {{ room.master }}
+  <v-container class="lobby">
+    <v-row>
+      <v-col align="center">
+        <v-btn @click="newRoom()">Start a new stream</v-btn>
+      </v-col>
+    </v-row>
+    <v-card
+      v-for="room in roomList"
+      :key="room.id"
+      elevation="2"
+      outlined
+      @click="enterRoom(room)"
+    >
+      <v-card-title>
+        {{ room.title }}
+      </v-card-title>
+      <v-card-subtitle>
+        {{ room.master }}
+      </v-card-subtitle>
+      <v-card-text>
         {{ toTime(room) }}
-      </div>
-    </div>
-  </div>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn color="orange">
+          Enter Stream
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-container>
 </template>
 
 <script>
@@ -39,18 +59,18 @@ export default {
   methods: {
     async newRoom() {
       try {
-        let newRoom = {
+        const newRoom = {
           title: 'Hi everyone!',
           master: 'KST',
           timeCreated: firebase.firestore.FieldValue.serverTimestamp(),
           pinnableNum: 3 // The max. number of pinned chat
         }
-        let docRef = await db.collection('lobby').add(newRoom)
-        let chatCollection = docRef.collection('pinnedChats')
+        const docRef = await db.collection('lobby').add(newRoom)
+        const chatCollection = docRef.collection('pinnedChats')
 
         console.log('collection??')
-        let curUser = firebase.auth().currentUser
-        let chatInfo = {
+        const curUser = firebase.auth().currentUser
+        const chatInfo = {
           uid: curUser.uid,
           displayName: curUser.displayName,
           photoURL: curUser.photoURL,

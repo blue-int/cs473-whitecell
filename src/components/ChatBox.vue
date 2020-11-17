@@ -1,14 +1,26 @@
 <template>
-  <div>
-    ChatBox!
-    <div class="chat-box">
-      <div v-for="chat in chatList" :key="chat.id">
-        {{ chat.displayName }}: {{ chat.msg }}
-      </div>
-    </div>
-    <input v-model="text" placeholder="chat" @keyup.enter="send()" />
-    <button @click="send()">send</button>
-  </div>
+  <v-container>
+    <v-row no-gutters class="chat-box">
+      <v-col>
+        <v-row v-for="chat in chatList" :key="chat.id" class="px-2" no-gutters>
+          <v-col class="py-1">{{ chat.displayName }}: {{ chat.msg }}</v-col>
+        </v-row>
+      </v-col>
+    </v-row>
+    <v-text-field
+      v-model="text"
+      label="Please chat"
+      class="pt-2"
+      type="text"
+      append-icon="send"
+      autofocus
+      outlined
+      dense
+      hide-details
+      @keyup.enter="send()"
+      @click:append="send()"
+    />
+  </v-container>
 </template>
 
 <script>
@@ -63,8 +75,7 @@ export default {
 
 <style lang="scss" scoped>
 .chat-box {
-  width: 500px;
-  height: 100px;
+  height: 300px;
   border: 1px solid black;
   overflow-y: scroll;
 }
