@@ -1,6 +1,18 @@
 <template>
-  <v-container>
-    <v-row>
+  <v-container fluid fill-height class="pa-0 room-container">
+    <vue-plyr>
+      <div class="plyr__video-embed">
+        <iframe
+          src="https://www.youtube.com/embed/bTqVqk7FSmY?amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1"
+          allowfullscreen
+          allowtransparency
+          allow="autoplay"
+        ></iframe>
+      </div>
+    </vue-plyr>
+    <v-toolbar elevation="3"></v-toolbar>
+    <ChatBox />
+    <!-- <v-row>
       <v-col>
         <router-link to="/lobby">Lobby</router-link>
         <div>Room {{ $route.params.id }}</div>
@@ -9,22 +21,7 @@
         <div>Viewers: {{ viewers }}</div>
         <v-btn @click="stopStream()">Stop stream</v-btn>
       </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
-        <vue-plyr>
-          <div class="plyr__video-embed">
-            <iframe
-              src="https://www.youtube.com/embed/bTqVqk7FSmY?amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1"
-              allowfullscreen
-              allowtransparency
-              allow="autoplay"
-            ></iframe>
-          </div>
-        </vue-plyr>
-      </v-col>
-    </v-row>
-    <ChatBox />
+    </v-row> -->
   </v-container>
 </template>
 
@@ -95,3 +92,9 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.room-container {
+  display: grid;
+  grid-template-rows: min-content min-content minmax(0, 1fr);
+}
+</style>

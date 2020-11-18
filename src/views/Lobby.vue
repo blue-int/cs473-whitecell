@@ -19,7 +19,7 @@
       <!-- <v-avatar color="primary" size="48"></v-avatar> -->
       <v-card-title class="pa-3">{{ room.title }}</v-card-title>
       <v-card-subtitle class="px-3 pb-3"
-        >{{ room.master }} · {{ toTime(room) }}</v-card-subtitle
+        >{{ room.master }} · 1234viewers</v-card-subtitle
       >
     </v-card>
   </v-container>
