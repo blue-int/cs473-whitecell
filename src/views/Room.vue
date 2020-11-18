@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid fill-height class="pa-0 room-container">
+  <v-container fluid class="pa-0 room-container">
     <vue-plyr>
       <div class="plyr__video-embed">
         <iframe
@@ -94,6 +94,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 .room-container {
+  //hard coded.. fix soon
+  height: calc(100vh - 56px);
+
   display: grid;
   grid-template-rows: min-content min-content minmax(0, 1fr);
 }

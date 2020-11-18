@@ -94,7 +94,7 @@ export default {
   grid-template-rows: minmax(0, 1fr) min-content;
 }
 .chat-box {
-  height: 100%;
   overflow-y: scroll;
+  height: 100%;
 }
 </style>
