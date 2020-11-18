@@ -1,14 +1,18 @@
 <template>
-  <v-container fluid class="lobby">
-    <v-row>
-      <v-col align="center">
-        <v-btn @click="newRoom()">Start a new stream</v-btn>
-      </v-col>
-    </v-row>
+  <v-container fluid class="lobby pa-0">
+    <div class="parallax pa-0"></div>
+    <v-toolbar elevation="0" color="transparent">
+      <v-btn icon dark class="ma-0">
+        <v-icon>arrow_back</v-icon>
+      </v-btn>
+    </v-toolbar>
+
+    <!-- <v-btn @click="newRoom()">Start a new stream</v-btn> -->
+
     <v-card
       v-for="room in roomList"
       :key="room.id"
-      class="ma-3"
+      class="mx-6 mb-3"
       elevation="12"
       @click="enterRoom(room)"
     >
@@ -116,4 +120,25 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import 'src/styles/variables.scss';
+.lobby {
+  display: grid;
+  grid-template-rows: 15vh;
+}
+.space {
+  height: 15vh;
+  color: white;
+  background-color: transparent;
+  text-align: center;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+.parallax {
+  z-index: 0;
+  position: absolute;
+  width: 100%;
+  height: 30vh;
+  background-color: #3e7495;
+  // background-color: transparent;
+}
 </style>
