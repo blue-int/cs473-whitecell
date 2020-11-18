@@ -6,7 +6,12 @@
         <div>Room {{ $route.params.id }}</div>
         <div>{{ title }}</div>
         <div>{{ master }}<br /></div>
-        <div>Viewers: {{ viewers }}</div>
+        <div>Viewers: {{ viewers.length }}</div>
+        <div>_______________________</div>
+        <v-row v-for="name in viewers" :key="name.id" class="px-2" no-gutters>
+          <v-col class="py-1"> {{ name }} </v-col>
+        </v-row>
+        <div>_______________________</div>
         <v-btn @click="stopStream()">Stop stream</v-btn>
       </v-col>
     </v-row>
@@ -40,7 +45,7 @@ export default {
     return {
       title: '',
       master: '',
-      viewers: 0,
+      viewers: [],
       pinnedChats: []
     }
   },
@@ -55,6 +60,7 @@ export default {
     } else {
       this.title = doc.data().title
       this.master = doc.data().master
+      this.updateUserList()
     }
   },
   async updated() {
@@ -68,28 +74,37 @@ export default {
     } else {
       this.title = doc.data().title
       this.master = doc.data().master
-      db.collection('lobby')
-        .doc(this.$route.params.id)
-        .collection('viewers')
-        .get()
-        .then(view_list => (this.viewers = view_list.size))
-      /*
-      db.collection('lobby')
-        .doc(this.$route.params.id)
-        .collection('pinnedChats')
-        .get()
-        .then(pinnedChats => {
-          console.log(pinnedChats)
-          this.pinnedChats = pinnedChats
-        })
-        */
     }
   },
   methods: {
-    stopStream() {
+    updateUserList() {
       db.collection('lobby')
         .doc(this.$route.params.id)
-        .delete()
+        .collection('viewers')
+        .onSnapshot(snapshot => {
+          this.viewers = snapshot.docs.map(doc => {
+            return doc.data().name
+          })
+        })
+    },
+    stopStream() {
+      const curRoom = db.collection('lobby').doc(this.$route.params.id)
+      const viewColRef = curRoom.collection('viewers')
+      const pinColRef = curRoom.collection('pinnedChats')
+
+      const deleteViewers = viewColRef.onSnapshot(snapshot => {
+        snapshot.docs.forEach(doc => {
+          viewColRef.doc(doc.id).delete()
+        })
+      })
+      const deletePinned = pinColRef.onSnapshot(snapshot => {
+        snapshot.docs.forEach(doc => {
+          pinColRef.doc(doc.id).delete()
+        })
+      })
+      deleteViewers()
+      deletePinned()
+      curRoom.delete()
       this.$router.push('/lobby')
     }
   }
