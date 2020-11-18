@@ -51,6 +51,14 @@ const routes = [
     component: Room,
     meta: {
       requiresAuth: true
+    },
+    beforeRouteEnter(to, from, next) {
+      console.log(to, from, next)
+      console.log('TODO: BeforeEnter: insert participants list')
+    },
+    beforeRouteLeave(to, from, next) {
+      console.log(to, from, next)
+      console.log('TODO: BeforeLeave: remove participants list')
     }
   }
 ]

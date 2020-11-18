@@ -68,7 +68,6 @@ export default {
         const docRef = await db.collection('lobby').add(newRoom)
         const chatCollection = docRef.collection('pinnedChats')
 
-        console.log('collection??')
         const curUser = firebase.auth().currentUser
         const chatInfo = {
           uid: curUser.uid,
@@ -82,7 +81,7 @@ export default {
         await chatCollection.doc('pinChat1').set(chatInfo)
         await chatCollection.doc('pinChat2').set(chatInfo)
         await chatCollection.doc('pinChat3').set(chatInfo)
-        console.log(docRef.id)
+
         this.enterRoom(docRef)
       } catch (e) {
         console.log(e)
@@ -104,7 +103,6 @@ export default {
           .collection('viewers')
         userRef.doc(userInfo.uid).set(userInfo)
         this.$router.push(`/lobby/${room.id}`)
-        console.log('Update done.')
       } else {
         alert('You are not logged in!')
       }
