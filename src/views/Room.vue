@@ -7,7 +7,11 @@
         <div>{{ title }}</div>
         <div>{{ master }}<br /></div>
         <div>Viewers: {{ viewers.length }}</div>
-        <div>Viewerslist: {{ viewers }}</div>
+        <div>_______________________</div>
+        <v-row v-for="name in viewers" :key="name.id" class="px-2" no-gutters>
+          <v-col class="py-1"> {{ name }} </v-col>
+        </v-row>
+        <div>_______________________</div>
         <v-btn @click="stopStream()">Stop stream</v-btn>
       </v-col>
     </v-row>
@@ -79,7 +83,7 @@ export default {
         .collection('viewers')
         .onSnapshot(snapshot => {
           this.viewers = snapshot.docs.map(doc => {
-            return { id: doc.id, ...doc.data() }
+            return doc.data().name
           })
         })
     },
