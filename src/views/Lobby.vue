@@ -7,6 +7,18 @@
       </v-btn>
     </v-toolbar>
 
+    <v-btn
+      class="mx-3 my-6 float-btn"
+      elevation="12"
+      fab
+      dark
+      color="#3e7495"
+      @click="newRoom()"
+    >
+      <v-icon dark>
+        add
+      </v-icon>
+    </v-btn>
     <!-- <v-btn @click="newRoom()">Start a new stream</v-btn> -->
 
     <v-card
@@ -140,5 +152,11 @@ export default {
   height: 30vh;
   background-color: #3e7495;
   // background-color: transparent;
+}
+.float-btn {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 10;
 }
 </style>
