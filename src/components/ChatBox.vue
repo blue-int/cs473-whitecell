@@ -1,21 +1,23 @@
 <template>
   <v-container>
-    <!--    <v-row no-gutters class="chat-box">-->
-    <div class="Pinned">
-      <div v-for="pin in pinnedchatList" :key="pin.id">
-        <div class="py-1" @click="like(pin)">
-          {{ pin.displayName }}: {{ pin.msg }} , likes:{{ pin.likes }}
-        </div>
-      </div>
-    </div>
-    <v-col class="chat-box">
-      <v-row v-for="chat in chatList" :key="chat.id" class="px-2" no-gutters>
-        <v-col class="py-1" @click="like(chat)">
-          {{ chat.displayName }}: {{ chat.msg }} likes:{{ chat.likes }}
-        </v-col>
-      </v-row>
-    </v-col>
-    <!--    </v-row>-->
+    <v-row no-gutters>
+      <v-col class="pin-box">
+        <v-row v-for="pin in pinList" :key="pin.id" class="px-2" no-gutters>
+          <v-col class="py-1" @click="like(pin)">
+            {{ pin.displayName }}: {{ pin.msg }} , likes:{{ pin.likes }}
+          </v-col>
+        </v-row>
+      </v-col>
+    </v-row>
+    <v-row no-gutters>
+      <v-col class="chat-box">
+        <v-row v-for="chat in chatList" :key="chat.id" class="px-2" no-gutters>
+          <v-col class="py-1" @click="like(chat)">
+            {{ chat.displayName }}: {{ chat.msg }} likes:{{ chat.likes }}
+          </v-col>
+        </v-row>
+      </v-col>
+    </v-row>
     <v-text-field
       v-model="text"
       label="Please chat"
@@ -33,93 +35,93 @@
 </template>
 
 <script>
+import { db } from '@/components/firebaseInit'
 import firebase from 'firebase/app'
-//import PinnedChats from './PinnedChats'
 export default {
   name: 'ChatBox',
-  /*  components: {
-    PinnedChats
-  },*/
   data() {
     return {
+      pinList: [],
       chatList: [],
+      unsubscribe: [],
       text: '',
-      currentUser: firebase.auth().currentUser,
-      pinnedchatList: [],
-      number: 1
+      currentUser: firebase.auth().currentUser
     }
   },
-  /*  created() {
-    db.collection('lobby')
-      .doc(this.$route.params.id)
-      .collection('chatList')
-      .onSnapshot(snapshot => {
-        this.chatList = snapshot.docs.map(doc => {
-          return { id: doc.id, ...doc.data() }
-        })
-      })
-    // test code
-    for (let i = 0; i < 100; i++) {
-      this.chatList.push({
-        id: i,
-        displayName: 'BLUE',
-        msg: 'hiiiiiiiiiii'
-      })
+  computed: {
+    docRef() {
+      return db.collection('lobby').doc(this.$route.params.id)
+    },
+    importance(chat) {
+      return 6 * chat.likes - chat.timeCreated.seconds
     }
-  }, */
+  },
+  created() {
+    this.unsubscribe = [
+      this.docRef
+        .collection('chatList')
+        .orderBy('timeCreated', 'desc')
+        .onSnapshot(snapshot => {
+          this.chatList = snapshot.docs
+            .map(doc => ({
+              id: doc.id,
+              ...doc.data()
+            }))
+            .reverse()
+        }),
+      this.docRef
+        .collection('chatList')
+        .where('pinned', '==', 'true')
+        .orderBy('timeCreated', 'desc')
+        .onSnapshot(snapshot => {
+          this.pinList = snapshot.docs
+            .map(doc => ({
+              id: doc.id,
+              ...doc.data()
+            }))
+            .sort((a, b) => this.importance(b) - this.importance(a))
+            .slice(2)
+        })
+    ]
+  },
   updated() {
     const chatBox = this.$el.querySelector('.chat-box')
     chatBox.scrollTop = chatBox.scrollHeight
   },
+  destroyed() {
+    this.unsubscribe.forEach(unsub => unsub())
+  },
   methods: {
     send() {
       if (this.text.length == 0) return
-      this.chatList.push({
+      this.docRef.collection('chatList').add({
         uid: this.currentUser.uid,
         displayName: this.currentUser.displayName,
         photoURL: this.currentUser.photoURL,
-        timeCreated: firebase.firestore.Timestamp.now(),
-        updateTime: 0,
-        pinnedTime: 0,
+        timeCreated: firebase.firestore.FieldValue.serverTimestamp(),
         msg: this.text,
-        likes: 0
+        likes: 0,
+        pinned: false
       })
       this.text = ''
     },
     like(chat) {
-      chat.likes = chat.likes + 1
-      this.update_pin(chat)
-    },
-    update_pin(chat) {
-      if (chat.likes > 5) {
-        if (!this.pinnedchatList.includes(chat)) {
-          if (this.pinnedchatList.length < 3) {
-            this.pinnedchatList.push(chat)
-
-            chat.pinnedTime = firebase.firestore.Timestamp.now().seconds
-          } else {
-            if (
-              this.pinnedchatList[this.pinnedchatList.length - 1].likes <
-              chat.likes
-            ) {
-              this.pinnedchatList.pop()
-              this.pinnedchatList.push(chat)
-
-              chat.pinnedTime = firebase.firestore.Timestamp.now().seconds
-            }
-          }
-        }
-
-        //console.log(chat.updateTime)
-        this.pinnedchatList.sort(function(a, b) {
-          return (
-            b['likes'] -
-            (firebase.firestore.Timestamp.now().seconds - b['pinnedTime']) -
-            (a['likes'] -
-              (firebase.firestore.Timestamp.now().seconds - a['pinnedTime'])) //현재는 now.seconds 빼도 되긴 함 : linear해서
-          )
+      this.docRef
+        .collection('chatList')
+        .doc(chat.id)
+        .update({
+          likes: firebase.firestore.FieldValue.increment(1),
+          pinned: this.pinned(chat)
         })
-      }
+    },
+    pinned(chat) {
+      if (chat.likes < 5 || this.pinList.includes(chat)) return false
+      else if (
+        this.importance(this.pinList[this.pinList.length - 1]) <
+        this.importance(chat)
+      ) {
+        return true
+      } else return false
     }
   }
 }
@@ -131,9 +133,8 @@ export default {
   border: 1px solid black;
   overflow-y: scroll;
 }
-.Pinned {
+.pin-box {
   height: 100px;
-  width: 702px;
   border: 1px solid black;
   overflow-y: scroll;
 }
