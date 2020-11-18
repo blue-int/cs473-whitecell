@@ -1,5 +1,5 @@
 <template>
-  <v-container class="lobby">
+  <v-container fluid class="lobby">
     <v-row>
       <v-col align="center">
         <v-btn @click="newRoom()">Start a new stream</v-btn>
@@ -8,24 +8,19 @@
     <v-card
       v-for="room in roomList"
       :key="room.id"
-      elevation="2"
-      outlined
+      class="ma-3"
+      elevation="12"
       @click="enterRoom(room)"
     >
-      <v-card-title>
-        {{ room.title }}
-      </v-card-title>
-      <v-card-subtitle>
-        {{ room.master }}
-      </v-card-subtitle>
-      <v-card-text>
-        {{ toTime(room) }}
-      </v-card-text>
-      <v-card-actions>
-        <v-btn color="orange">
-          Enter Stream
-        </v-btn>
-      </v-card-actions>
+      <v-img
+        :aspect-ratio="16 / 9"
+        src="https://img.youtube.com/vi/bTqVqk7FSmY/maxresdefault.jpg"
+      ></v-img>
+      <!-- <v-avatar color="primary" size="48"></v-avatar> -->
+      <v-card-title class="pa-3">{{ room.title }}</v-card-title>
+      <v-card-subtitle class="px-3 pb-3"
+        >{{ room.master }} · {{ toTime(room) }}</v-card-subtitle
+      >
     </v-card>
   </v-container>
 </template>
@@ -119,3 +114,6 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+@import 'src/styles/variables.scss';
+</style>
