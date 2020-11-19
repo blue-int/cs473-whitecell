@@ -2,7 +2,7 @@
   <v-container fluid class="lobby pa-0">
     <div class="parallax pa-0"></div>
     <v-toolbar elevation="0" color="transparent">
-      <v-btn icon dark class="ma-0">
+      <v-btn icon dark class="ma-0" @click="leaveLobby()">
         <v-icon>arrow_back</v-icon>
       </v-btn>
     </v-toolbar>
@@ -99,7 +99,9 @@ export default {
         console.log(e)
       }
     },
-
+    leaveLobby() {
+      this.$router.push('/')
+    },
     enterRoom(room) {
       let curUser = firebase.auth().currentUser
       if (curUser != null) {

@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar app inverted-scroll class="px-0" elevation="0">
+    <v-app-bar app v-bind="appBarScroll" class="px-0" elevation="0">
       <div class="d-flex align-center">
         <!-- <v-img
           alt="Vuetify Logo"
@@ -10,11 +10,9 @@
           transition="scale-transition"
           width="40"
         /> -->
-        <router-link to="/lobby">
-          <v-btn icon>
-            <v-icon>arrow_back</v-icon>
-          </v-btn>
-        </router-link>
+        <v-btn icon @click="goBack()">
+          <v-icon>arrow_back</v-icon>
+        </v-btn>
       </div>
 
       <v-spacer></v-spacer>
@@ -39,6 +37,13 @@ export default {
   data: () => ({
     currentUser: firebase.auth().currentUser
   }),
+  computed: {
+    appBarScroll: function() {
+      return {
+        'inverted-scroll': this.$route.name === 'Lobby' ? true : false
+      }
+    }
+  },
   methods: {
     async signOut() {
       try {
@@ -46,6 +51,13 @@ export default {
         this.$router.push('/login')
       } catch (e) {
         console.log(e)
+      }
+    },
+    goBack() {
+      if (this.$route.name === 'Room') {
+        this.$router.push('/lobby')
+      } else if (this.$route.name === 'Lobby') {
+        this.$router.push('/')
       }
     }
   }
