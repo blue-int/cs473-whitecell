@@ -154,6 +154,7 @@ export default {
           pinned: false
         })
       }, 140)
+    },
     importance(chat) {
       return 6 * chat.likes + chat.timeCreated.seconds
     }
