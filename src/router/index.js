@@ -41,6 +41,7 @@ const routes = [
   },
   {
     path: '/lobby',
+    name: 'Lobby',
     component: Lobby,
     meta: {
       requiresAuth: true
@@ -48,6 +49,7 @@ const routes = [
   },
   {
     path: '/lobby/:id',
+    name: 'Room',
     component: Room,
     meta: {
       requiresAuth: true

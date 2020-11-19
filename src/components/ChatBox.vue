@@ -1,5 +1,19 @@
 <template>
-  <v-container>
+  <v-container fluid fill-height class="pa-0 chatbox-container">
+    <!-- <v-list class="chat-box">
+      <v-list-item v-for="chat in chatList" :key="chat.id">
+        <v-list-item-avatar>
+          <v-avatar size="56">
+            {{ chat.displayName }}
+          </v-avatar>
+        </v-list-item-avatar>
+        <v-list-item-content>
+          <v-list-item-title>{{ chat.displayName }}</v-list-item-title>
+          <v-list-item-title>{{ chat.msg }}</v-list-item-title>
+          <v-divider></v-divider>
+        </v-list-item-content>
+      </v-list-item>
+    </v-list> -->
     <v-row no-gutters>
       <v-col class="pin-box">
         <v-row v-for="pin in pinList" :key="pin.id" class="px-2" no-gutters>
@@ -18,34 +32,20 @@
         </v-row>
       </v-col>
     </v-row>
-    <!-- <v-row no-gutters>
-      <v-col class="chat-box">
-        <v-row
-          v-for="chat in dummychats"
-          :key="chat.id"
-          class="px-2"
-          no-gutters
-        >
-          <v-col class="py-1" @click="like(chat)">
-            {{ chat.name }}: {{ chat.msg }} likes:{{ 0 }}
-          </v-col>
-        </v-row>
-      </v-col>
-    </v-row> -->
-    <v-text-field
-      v-model="text"
-      label="Please chat"
-      class="pt-2"
-      type="text"
-      append-icon="send"
-      autofocus
-      outlined
-      dense
-      hide-details
-      @keyup.enter="send()"
-      @click:append="send()"
-    />
-    <v-btn @click="showdummy()">chat with dummy</v-btn>
+    <v-toolbar elevation="3" class="pa-0" bottom>
+      <v-text-field
+        v-model="text"
+        label="Please chat"
+        type="text"
+        append-icon="send"
+        outlined
+        dense
+        hide-details
+        @keyup.enter="send()"
+        @click:append="send()"
+      />
+      <v-btn @click="showdummy()">chat with dummy</v-btn>
+    </v-toolbar>
   </v-container>
 </template>
 
@@ -163,13 +163,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.chatbox-container {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) min-content;
+}
 .chat-box {
   height: 200px;
   border: 1px solid black;
   overflow-y: scroll;
 }
 .pin-box {
-  height: 100px;
+  height: 100%;
   border: 1px solid black;
   overflow-y: scroll;
 }

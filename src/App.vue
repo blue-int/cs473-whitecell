@@ -1,36 +1,22 @@
 <template>
   <v-app>
-    <v-app-bar app color="primary" dark>
+    <v-app-bar app v-bind="appBarScroll" class="px-0" elevation="0">
       <div class="d-flex align-center">
-        <v-img
+        <!-- <v-img
           alt="Vuetify Logo"
           class="shrink mr-2"
           contain
           src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
           transition="scale-transition"
           width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
+        /> -->
+        <v-btn icon @click="goBack()">
+          <v-icon>arrow_back</v-icon>
+        </v-btn>
       </div>
 
       <v-spacer></v-spacer>
 
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>open_in_new</v-icon>
-      </v-btn>
       <span v-if="currentUser != null">
         |
         <button @click="signOut()">Sign Out</button>
@@ -51,6 +37,13 @@ export default {
   data: () => ({
     currentUser: firebase.auth().currentUser
   }),
+  computed: {
+    appBarScroll: function() {
+      return {
+        'inverted-scroll': this.$route.name === 'Lobby' ? true : false
+      }
+    }
+  },
   methods: {
     async signOut() {
       try {
@@ -59,7 +52,20 @@ export default {
       } catch (e) {
         console.log(e)
       }
+    },
+    goBack() {
+      if (this.$route.name === 'Room') {
+        this.$router.push('/lobby')
+      } else if (this.$route.name === 'Lobby') {
+        this.$router.push('/')
+      }
     }
   }
 }
 </script>
+<style lang="scss">
+.v-toolbar__content {
+  padding-left: 4px !important;
+  padding-right: 4px !important;
+}
+</style>

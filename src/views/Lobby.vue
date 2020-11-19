@@ -1,31 +1,42 @@
 <template>
-  <v-container class="lobby">
-    <v-row>
-      <v-col align="center">
-        <v-btn @click="newRoom()">Start a new stream</v-btn>
-      </v-col>
-    </v-row>
+  <v-container fluid class="lobby pa-0">
+    <div class="parallax pa-0"></div>
+    <v-toolbar elevation="0" color="transparent">
+      <v-btn icon dark class="ma-0" @click="leaveLobby()">
+        <v-icon>arrow_back</v-icon>
+      </v-btn>
+    </v-toolbar>
+
+    <v-btn
+      class="mx-3 my-6 float-btn"
+      elevation="12"
+      fab
+      dark
+      color="#3e7495"
+      @click="newRoom()"
+    >
+      <v-icon dark>
+        add
+      </v-icon>
+    </v-btn>
+    <!-- <v-btn @click="newRoom()">Start a new stream</v-btn> -->
+
     <v-card
       v-for="room in roomList"
       :key="room.id"
-      elevation="2"
-      outlined
+      class="mx-6 mb-3"
+      elevation="12"
       @click="enterRoom(room)"
     >
-      <v-card-title>
-        {{ room.title }}
-      </v-card-title>
-      <v-card-subtitle>
-        {{ room.master }}
-      </v-card-subtitle>
-      <v-card-text>
-        {{ toTime(room) }}
-      </v-card-text>
-      <v-card-actions>
-        <v-btn color="orange">
-          Enter Stream
-        </v-btn>
-      </v-card-actions>
+      <v-img
+        :aspect-ratio="16 / 9"
+        src="https://img.youtube.com/vi/bTqVqk7FSmY/maxresdefault.jpg"
+      ></v-img>
+      <!-- <v-avatar color="primary" size="48"></v-avatar> -->
+      <v-card-title class="pa-3">{{ room.title }}</v-card-title>
+      <v-card-subtitle class="px-3 pb-3"
+        >{{ room.master }} · 1234viewers</v-card-subtitle
+      >
     </v-card>
   </v-container>
 </template>
@@ -87,7 +98,9 @@ export default {
         console.log(e)
       }
     },
-
+    leaveLobby() {
+      this.$router.push('/')
+    },
     enterRoom(room) {
       let curUser = firebase.auth().currentUser
       if (curUser != null) {
@@ -117,3 +130,33 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+@import 'src/styles/variables.scss';
+.lobby {
+  display: grid;
+  grid-template-rows: 15vh;
+}
+.space {
+  height: 15vh;
+  color: white;
+  background-color: transparent;
+  text-align: center;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+.parallax {
+  z-index: 0;
+  position: absolute;
+  width: 100%;
+  height: 30vh;
+  background-color: #3e7495;
+  // background-color: transparent;
+}
+.float-btn {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 10;
+}
+</style>
