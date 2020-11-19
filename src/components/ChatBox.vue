@@ -69,9 +69,6 @@ export default {
   computed: {
     docRef() {
       return db.collection('lobby').doc(this.$route.params.id)
-    },
-    importance(chat) {
-      return 6 * chat.likes - chat.timeCreated.seconds
     }
   },
   created() {
@@ -90,7 +87,7 @@ export default {
         }),
       this.docRef
         .collection('chatList')
-        .where('pinned', '==', 'true')
+        .where('pinned', '==', true)
         .orderBy('timeCreated', 'desc')
         .onSnapshot(snapshot => {
           this.pinList = snapshot.docs
@@ -99,7 +96,7 @@ export default {
               ...doc.data()
             }))
             .sort((a, b) => this.importance(b) - this.importance(a))
-            .slice(2)
+            .slice(0, 2)
         })
     ]
   },
@@ -137,8 +134,9 @@ export default {
     pinned(chat) {
       if (chat.likes < 5 || this.pinList.includes(chat)) return false
       else if (
+        this.pinList.length < 3 ||
         this.importance(this.pinList[this.pinList.length - 1]) <
-        this.importance(chat)
+          this.importance(chat)
       ) {
         return true
       } else return false
@@ -156,6 +154,8 @@ export default {
           pinned: false
         })
       }, 140)
+    importance(chat) {
+      return 6 * chat.likes + chat.timeCreated.seconds
     }
   }
 }
