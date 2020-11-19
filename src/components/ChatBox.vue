@@ -144,7 +144,7 @@ export default {
     showdummy() {
       this.stopdummy = setInterval(() => {
         if (this.dummychats.length === 0) {
-          this.clearInterval(this.stopdummy)
+          clearInterval(this.stopdummy)
           return
         }
         const chat = this.dummychats.shift()
