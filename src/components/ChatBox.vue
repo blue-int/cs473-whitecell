@@ -144,7 +144,7 @@ export default {
     showdummy() {
       this.stopdummy = setInterval(() => {
         const chat = this.dummychats.shift()
-        this.docRef.collection('chatList').add({
+        this.chatList.push({
           uid: null,
           displayName: chat.name,
           photoURL: null,
