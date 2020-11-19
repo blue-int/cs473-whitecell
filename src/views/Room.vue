@@ -29,6 +29,22 @@
         </vue-plyr>
       </v-col>
     </v-row>
+    <v-row>
+      <v-col>
+        <vue-plyr>
+          <div>
+            <iframe
+              src="https://clips.twitch.tv/embed?clip=BlazingGeniusPotUncleNox&parent=cs473-whitecell.web.app"
+              frameborder="0"
+              allowfullscreen="true"
+              scrolling="no"
+              height="378"
+              width="620"
+            ></iframe>
+          </div>
+        </vue-plyr>
+      </v-col>
+    </v-row>
     <ChatBox />
   </v-container>
 </template>
