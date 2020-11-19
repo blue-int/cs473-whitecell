@@ -62,19 +62,19 @@ export default {
       dummychats: [],
       unsubscribe: [],
       text: '',
-      stopdummy: 0,
+      stopdummy: null,
       currentUser: firebase.auth().currentUser
     }
   },
   computed: {
-    docRef() {
+    roomRef() {
       return db.collection('lobby').doc(this.$route.params.id)
     }
   },
   created() {
     this.dummychats = dummychats.slice()
     this.unsubscribe = [
-      this.docRef
+      this.roomRef
         .collection('chatList')
         .orderBy('timeCreated', 'desc')
         .onSnapshot(snapshot => {
@@ -85,7 +85,7 @@ export default {
             }))
             .reverse()
         }),
-      this.docRef
+      this.roomRef
         .collection('chatList')
         .where('pinned', '==', true)
         .orderBy('timeCreated', 'desc')
@@ -105,13 +105,13 @@ export default {
     chatBox.scrollTop = chatBox.scrollHeight
   },
   destroyed() {
-    clearTimeout(this.stopdummy)
+    clearInterval(this.stopdummy)
     this.unsubscribe.forEach(unsub => unsub())
   },
   methods: {
     send() {
       if (this.text.length == 0) return
-      this.docRef.collection('chatList').add({
+      this.roomRef.collection('chatList').add({
         uid: this.currentUser.uid,
         displayName: this.currentUser.displayName,
         photoURL: this.currentUser.photoURL,
@@ -123,7 +123,7 @@ export default {
       this.text = ''
     },
     like(chat) {
-      this.docRef
+      this.roomRef
         .collection('chatList')
         .doc(chat.id)
         .update({
@@ -143,12 +143,16 @@ export default {
     },
     showdummy() {
       this.stopdummy = setInterval(() => {
+        if (this.dummychats.length === 0) {
+          this.clearInterval(this.stopdummy)
+          return
+        }
         const chat = this.dummychats.shift()
         this.chatList.push({
           uid: null,
           displayName: chat.name,
           photoURL: null,
-          timeCreated: firebase.firestore.FieldValue.serverTimestamp(),
+          timeCreated: firebase.firestore.Timestamp.now(),
           msg: chat.msg,
           likes: 0,
           pinned: false

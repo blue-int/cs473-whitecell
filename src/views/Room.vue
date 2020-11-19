@@ -16,21 +16,6 @@
     <ChatBox />
     <!-- <v-row>
       <v-col>
-        <router-link to="/lobby">Lobby</router-link>
-        <div>Room {{ $route.params.id }}</div>
-        <div>{{ title }}</div>
-        <div>{{ master }}<br /></div>
-        <div>Viewers: {{ viewers.length }}</div>
-        <div>_______________________</div>
-        <v-row v-for="name in viewers" :key="name.id" class="px-2" no-gutters>
-          <v-col class="py-1"> {{ name }} </v-col>
-        </v-row>
-        <div>_______________________</div>
-        <v-btn @click="stopStream()">Stop stream</v-btn>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
         <vue-plyr>
           <div>
             <iframe
@@ -49,6 +34,7 @@
 </template>
 
 <script>
+import firebase from 'firebase/app'
 import { db } from '@/components/firebaseInit'
 import ChatBox from '@/components/ChatBox'
 export default {
@@ -60,8 +46,7 @@ export default {
     return {
       title: '',
       master: '',
-      viewers: [],
-      pinnedChats: []
+      viewers: []
     }
   },
   computed: {
@@ -77,7 +62,7 @@ export default {
     } else {
       this.title = doc.data().title
       this.master = doc.data().master
-      this.updateUserList()
+      this.updateViewers()
     }
   },
   async updated() {
@@ -91,7 +76,7 @@ export default {
     }
   },
   methods: {
-    updateUserList() {
+    updateViewers() {
       this.roomRef.collection('viewers').onSnapshot(snapshot => {
         this.viewers = snapshot.docs.map(doc => ({
           id: doc.id,
@@ -99,6 +84,7 @@ export default {
         }))
       })
     },
+    // TODO: should be replaced to cloud functions trigger
     async stopStream() {
       const viewersRef = this.roomRef.collection('viewers')
       const chatsRef = this.roomRef.collection('chatList')
@@ -118,6 +104,29 @@ export default {
       this.roomRef.delete()
       this.$router.push('/lobby')
     }
+  },
+  beforeRouteEnter: (to, from, next) => {
+    const currentUser = firebase.auth().currentUser
+    const userInfo = {
+      displayName: currentUser.displayName,
+      uid: currentUser.uid,
+      photoURL: currentUser.photoURL,
+      email: currentUser.email
+    }
+    db.collection('lobby')
+      .doc(to.params.id)
+      .collection('viewers')
+      .doc(userInfo.uid)
+      .set(userInfo)
+    next()
+  },
+  beforeRouteLeave: (to, from, next) => {
+    db.collection('lobby')
+      .doc(from.params.id)
+      .collection('viewers')
+      .doc(firebase.auth().currentUser.uid)
+      .delete()
+    next()
   }
 }
 </script>

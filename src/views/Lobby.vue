@@ -19,24 +19,23 @@
         add
       </v-icon>
     </v-btn>
-    <!-- <v-btn @click="newRoom()">Start a new stream</v-btn> -->
 
     <v-card
       v-for="room in roomList"
       :key="room.id"
       class="mx-6 mb-3"
       elevation="12"
-      @click="enterRoom(room)"
+      @click="$router.push(`/lobby/${room.id}`)"
     >
       <v-img
         :aspect-ratio="16 / 9"
         src="https://img.youtube.com/vi/bTqVqk7FSmY/maxresdefault.jpg"
-      ></v-img>
+      />
       <!-- <v-avatar color="primary" size="48"></v-avatar> -->
       <v-card-title class="pa-3">{{ room.title }}</v-card-title>
-      <v-card-subtitle class="px-3 pb-3"
-        >{{ room.master }} · 1234viewers</v-card-subtitle
-      >
+      <v-card-subtitle class="px-3 pb-3">
+        {{ room.master }} · 1234viewers
+      </v-card-subtitle>
     </v-card>
   </v-container>
 </template>
@@ -77,48 +76,14 @@ export default {
           pinnableNum: 3 // The max. number of pinned chat
         }
         const docRef = await db.collection('lobby').add(newRoom)
-        const chatCollection = docRef.collection('pinnedChats')
 
-        const curUser = firebase.auth().currentUser
-        const chatInfo = {
-          uid: curUser.uid,
-          displayName: curUser.displayName,
-          photoURL: curUser.photoURL,
-          timeCreated: firebase.firestore.Timestamp.now(),
-          msg: 'Hello, I am pinned chat! It is available only for debugging.',
-          likes: 100
-        }
-
-        await chatCollection.doc('pinChat1').set(chatInfo)
-        await chatCollection.doc('pinChat2').set(chatInfo)
-        await chatCollection.doc('pinChat3').set(chatInfo)
-
-        this.enterRoom(docRef)
+        this.$router.push(`/lobby/${docRef.id}`)
       } catch (e) {
         console.log(e)
       }
     },
     leaveLobby() {
       this.$router.push('/')
-    },
-    enterRoom(room) {
-      let curUser = firebase.auth().currentUser
-      if (curUser != null) {
-        let userInfo = {
-          name: curUser.displayName,
-          uid: curUser.uid,
-          photoURL: curUser.photoURL,
-          email: curUser.email
-        }
-        let userRef = db
-          .collection('lobby')
-          .doc(room.id)
-          .collection('viewers')
-        userRef.doc(userInfo.uid).set(userInfo)
-        this.$router.push(`/lobby/${room.id}`)
-      } else {
-        alert('You are not logged in!')
-      }
     },
     toTime(room) {
       if (room.timeCreated !== null) {
