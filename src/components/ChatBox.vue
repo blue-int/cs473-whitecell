@@ -18,6 +18,20 @@
         </v-row>
       </v-col>
     </v-row>
+    <!-- <v-row no-gutters>
+      <v-col class="chat-box">
+        <v-row
+          v-for="chat in dummychats"
+          :key="chat.id"
+          class="px-2"
+          no-gutters
+        >
+          <v-col class="py-1" @click="like(chat)">
+            {{ chat.name }}: {{ chat.msg }} likes:{{ 0 }}
+          </v-col>
+        </v-row>
+      </v-col>
+    </v-row> -->
     <v-text-field
       v-model="text"
       label="Please chat"
@@ -31,20 +45,24 @@
       @keyup.enter="send()"
       @click:append="send()"
     />
+    <v-btn @click="showdummy()">chat with dummy</v-btn>
   </v-container>
 </template>
 
 <script>
 import { db } from '@/components/firebaseInit'
 import firebase from 'firebase/app'
+import { dummychats } from '@/components/dummy'
 export default {
   name: 'ChatBox',
   data() {
     return {
       pinList: [],
       chatList: [],
+      dummychats: [],
       unsubscribe: [],
       text: '',
+      stopdummy: 0,
       currentUser: firebase.auth().currentUser
     }
   },
@@ -54,6 +72,7 @@ export default {
     }
   },
   created() {
+    this.dummychats = dummychats.slice()
     this.unsubscribe = [
       this.docRef
         .collection('chatList')
@@ -86,6 +105,7 @@ export default {
     chatBox.scrollTop = chatBox.scrollHeight
   },
   destroyed() {
+    clearTimeout(this.stopdummy)
     this.unsubscribe.forEach(unsub => unsub())
   },
   methods: {
@@ -121,6 +141,19 @@ export default {
         return true
       } else return false
     },
+    showdummy() {
+      this.stopdummy = setInterval(() => {
+        const chat = this.dummychats.shift()
+        this.docRef.collection('chatList').add({
+          uid: null,
+          displayName: chat.name,
+          photoURL: null,
+          timeCreated: firebase.firestore.FieldValue.serverTimestamp(),
+          msg: chat.msg,
+          likes: 0,
+          pinned: false
+        })
+      }, 140)
     importance(chat) {
       return 6 * chat.likes + chat.timeCreated.seconds
     }
