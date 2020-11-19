@@ -47,12 +47,14 @@ export default {
   name: 'Lobby',
   data() {
     return {
-      roomList: []
+      roomList: [],
+      unsubscribe: null
     }
   },
   created() {
     try {
-      db.collection('lobby')
+      this.unsubscribe = db
+        .collection('lobby')
         .orderBy('timeCreated', 'desc')
         .onSnapshot(snapshot => {
           this.roomList = snapshot.docs.map(doc => {
@@ -66,14 +68,16 @@ export default {
       console.log(e)
     }
   },
+  destroyed() {
+    this.unsubscribe()
+  },
   methods: {
     async newRoom() {
       try {
         const newRoom = {
           title: 'Hi everyone!',
           master: 'KST',
-          timeCreated: firebase.firestore.FieldValue.serverTimestamp(),
-          pinnableNum: 3 // The max. number of pinned chat
+          timeCreated: firebase.firestore.FieldValue.serverTimestamp()
         }
         const docRef = await db.collection('lobby').add(newRoom)
 

@@ -46,7 +46,8 @@ export default {
     return {
       title: '',
       master: '',
-      viewers: []
+      viewers: [],
+      unsubscribe: null
     }
   },
   computed: {
@@ -65,24 +66,19 @@ export default {
       this.updateViewers()
     }
   },
-  async updated() {
-    const doc = await this.roomRef.get()
-    if (!doc.exists) {
-      alert('The room does not exists')
-      this.$router.push('/lobby')
-    } else {
-      this.title = doc.data().title
-      this.master = doc.data().master
-    }
+  destroyed() {
+    this.unsubscribe()
   },
   methods: {
     updateViewers() {
-      this.roomRef.collection('viewers').onSnapshot(snapshot => {
-        this.viewers = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }))
-      })
+      this.unsubscribe = this.roomRef
+        .collection('viewers')
+        .onSnapshot(snapshot => {
+          this.viewers = snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          }))
+        })
     },
     // TODO: should be replaced to cloud functions trigger
     async stopStream() {
