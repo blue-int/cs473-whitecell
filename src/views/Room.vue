@@ -10,7 +10,6 @@
         ></iframe>
       </div>
     </vue-plyr>
-    <v-toolbar elevation="3" color="rgb(245,245,245)"> </v-toolbar>
     <v-btn
       class="ma-3 float-btn"
       elevation="12"
@@ -143,7 +142,7 @@ export default {
   height: calc(100vh - 56px);
 
   display: grid;
-  grid-template-rows: min-content min-content minmax(0, 1fr);
+  grid-template-rows: min-content minmax(0, 1fr);
 }
 .float-btn {
   position: fixed;

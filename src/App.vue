@@ -64,7 +64,7 @@ export default {
 }
 </script>
 <style lang="scss">
-.v-toolbar__content {
+.v-app-bar > .v-toolbar__content {
   padding-left: 4px !important;
   padding-right: 4px !important;
 }
