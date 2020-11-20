@@ -10,7 +10,7 @@
         ></iframe>
       </div>
     </vue-plyr>
-    <v-toolbar elevation="3">
+    <v-toolbar elevation="3" color="rgb(245,245,245)">
       <v-btn @click="stopStream()">Stop stream</v-btn>
     </v-toolbar>
     <ChatBox />

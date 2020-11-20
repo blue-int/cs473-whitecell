@@ -1,20 +1,50 @@
 <template>
   <v-container fluid fill-height class="pa-0 chatbox-container">
-    <!-- <v-list class="chat-box">
-      <v-list-item v-for="chat in chatList" :key="chat.id">
-        <v-list-item-avatar>
-          <v-avatar size="56">
-            {{ chat.displayName }}
-          </v-avatar>
-        </v-list-item-avatar>
-        <v-list-item-content>
-          <v-list-item-title>{{ chat.displayName }}</v-list-item-title>
-          <v-list-item-title>{{ chat.msg }}</v-list-item-title>
-          <v-divider></v-divider>
-        </v-list-item-content>
-      </v-list-item>
-    </v-list> -->
-    <v-row no-gutters>
+    <v-card class="rounded-0 card" elevation="0" color="rgb(220,220,220)">
+      <v-card-title class="py-1">Most liked chats</v-card-title>
+      <v-card-actions class="pa-0">
+        <v-btn icon @click="goBack()">
+          <v-icon>keyboard_arrow_down</v-icon>
+        </v-btn>
+      </v-card-actions>
+      <!-- <v-divider></v-divider> -->
+      <v-list class="py-0 pin-box" color="rgb(245,245,245)">
+        <v-list-item v-for="pin in pinList" :key="pin.id" @click="like(pin)">
+          <v-list-item-avatar
+            color="primary"
+            size="32"
+            class="my-2"
+          ></v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-title>
+              {{ pin.displayName }}: {{ pin.msg }} , likes:{{ pin.likes }}
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+      <v-divider></v-divider>
+    </v-card>
+
+    <v-virtual-scroll :items="chatList" item-height="48" class="chat-box">
+      <template v-slot:default="{ item }">
+        <v-list-item :key="item.id" class="chat" @click="like(item)">
+          <v-list-item-avatar
+            color="primary"
+            size="32"
+            class="my-2"
+          ></v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-title>
+              {{ item.displayName }}: {{ item.msg }} , likes:{{ item.likes }}
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-divider></v-divider>
+      </template>
+    </v-virtual-scroll>
+
+    <!-- <v-row no-gutters>
       <v-col class="pin-box">
         <v-row v-for="pin in pinList" :key="pin.id" class="px-2" no-gutters>
           <v-col class="py-1" @click="like(pin)">
@@ -31,8 +61,8 @@
           </v-col>
         </v-row>
       </v-col>
-    </v-row>
-    <v-toolbar elevation="3" class="pa-0" bottom>
+    </v-row> -->
+    <v-toolbar elevation="3" class="pa-0" bottom color="rgb(245,245,245)">
       <v-text-field
         v-model="text"
         label="Please chat"
@@ -169,16 +199,28 @@ export default {
 <style lang="scss" scoped>
 .chatbox-container {
   display: grid;
-  grid-template-rows: minmax(0, 1fr) min-content;
+  grid-template-rows: min-content minmax(0, 1fr) min-content;
+  overflow-y: hidden;
 }
-.chat-box {
-  height: 200px;
-  border: 1px solid black;
-  overflow-y: scroll;
+.card {
+  display: grid;
+  grid-template-columns: 1fr min-content;
+  grid-template-rows: min-content minmax(0, 1fr) min-content;
 }
 .pin-box {
-  height: 100%;
-  border: 1px solid black;
-  overflow-y: scroll;
+  grid-column: 1/-1;
 }
+// .chat {
+
+// }
+// .chat-box {
+//   height: 100%;
+//   border: 1px solid black;
+//   overflow-y: scroll;
+// }
+// .pin-box {
+//   height: 100%;
+//   border: 1px solid black;
+//   overflow-y: scroll;
+// }
 </style>
