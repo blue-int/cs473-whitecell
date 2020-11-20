@@ -10,9 +10,20 @@
         ></iframe>
       </div>
     </vue-plyr>
-    <v-toolbar elevation="3" color="rgb(245,245,245)">
-      <v-btn @click="stopStream()">Stop stream</v-btn>
-    </v-toolbar>
+    <v-toolbar elevation="3" color="rgb(245,245,245)"> </v-toolbar>
+    <v-btn
+      class="ma-3 float-btn"
+      elevation="12"
+      fab
+      dark
+      x-small
+      color="#3e7495"
+      @click="stopStream()"
+    >
+      <v-icon dark>
+        clear
+      </v-icon>
+    </v-btn>
     <ChatBox />
     <!-- <v-row>
       <v-col>
@@ -133,5 +144,11 @@ export default {
 
   display: grid;
   grid-template-rows: min-content min-content minmax(0, 1fr);
+}
+.float-btn {
+  position: fixed;
+  bottom: 56px;
+  right: 0;
+  z-index: 10;
 }
 </style>

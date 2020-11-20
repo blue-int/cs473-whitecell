@@ -74,8 +74,20 @@
         @keyup.enter="send()"
         @click:append="send()"
       />
-      <v-btn @click="showdummy()">chat with dummy</v-btn>
     </v-toolbar>
+    <v-btn
+      class="ma-3 float-btn"
+      elevation="12"
+      fab
+      dark
+      x-small
+      color="#3e7495"
+      @click="showdummy()"
+    >
+      <v-icon dark>
+        adb
+      </v-icon>
+    </v-btn>
   </v-container>
 </template>
 
@@ -209,6 +221,12 @@ export default {
 }
 .pin-box {
   grid-column: 1/-1;
+}
+.float-btn {
+  position: fixed;
+  bottom: 100px;
+  right: 0;
+  z-index: 10;
 }
 // .chat {
 
