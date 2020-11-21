@@ -38,7 +38,7 @@
             size="20"
             class="my-3 mr-3"
           ></v-list-item-avatar>
-          <v-list-item-content class="test py-0">
+          <v-list-item-content class="list-content py-0">
             <v-list-item-title class="my-0 mr-1">
               <span class="font-weight-bold">
                 {{ pin.displayName }}
@@ -49,7 +49,7 @@
             </v-list-item-title>
             <v-list-item-title class="like--text">
               {{ pin.likes }}
-              <v-icon color="like" size="15" class="test2"
+              <v-icon color="like" size="15" class="icon"
                 >favorite_border</v-icon
               >
             </v-list-item-title>
@@ -67,7 +67,7 @@
             size="20"
             class="my-3 mr-3"
           ></v-list-item-avatar>
-          <v-list-item-content class="test">
+          <v-list-item-content class="list-content">
             <v-list-item-title class="my-0 mr-1">
               <span class="font-weight-bold">
                 {{ item.displayName }}
@@ -76,8 +76,9 @@
                 {{ item.msg }}
               </span>
             </v-list-item-title>
-            <v-list-item-title>
-              <v-icon color="like" size="15" class="test2"
+            <v-list-item-title class="like--text">
+              {{ item.likes }}
+              <v-icon color="like" size="15" class="icon"
                 >favorite_border</v-icon
               >
             </v-list-item-title>
@@ -264,11 +265,11 @@ export default {
   right: 0;
   z-index: 10;
 }
-.test {
+.list-content {
   display: grid;
   grid-template-columns: 1fr min-content;
 }
-.test2 {
+.icon {
   padding-bottom: 2px;
 }
 </style>
