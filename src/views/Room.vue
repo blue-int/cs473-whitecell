@@ -57,7 +57,7 @@ export default {
       title: '',
       master: '',
       viewers: [],
-      unsubscribe: null
+      unsubList: []
     }
   },
   computed: {
@@ -77,18 +77,17 @@ export default {
     }
   },
   destroyed() {
-    this.unsubscribe()
+    this.unsubList.forEach(unsub => unsub())
   },
   methods: {
     updateViewers() {
-      this.unsubscribe = this.roomRef
-        .collection('viewers')
-        .onSnapshot(snapshot => {
-          this.viewers = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-          }))
-        })
+      const unsub = this.roomRef.collection('viewers').onSnapshot(snapshot => {
+        this.viewers = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }))
+      })
+      this.unsubList.push(unsub)
     },
     // TODO: should be replaced to cloud functions trigger
     async stopStream() {
