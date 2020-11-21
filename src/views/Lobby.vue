@@ -2,7 +2,7 @@
   <v-container fluid class="lobby pa-0">
     <div class="parallax pa-0"></div>
     <v-toolbar elevation="0" color="transparent">
-      <v-btn icon dark class="ma-0" @click="leaveLobby()">
+      <v-btn icon dark class="goBack-btn" @click="leaveLobby()">
         <v-icon>arrow_back</v-icon>
       </v-btn>
     </v-toolbar>
@@ -127,5 +127,8 @@ export default {
   bottom: 0;
   right: 0;
   z-index: 10;
+}
+.goBack-btn {
+  margin-left: -12px;
 }
 </style>

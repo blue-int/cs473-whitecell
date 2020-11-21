@@ -1,7 +1,7 @@
 <template>
   <v-container fluid fill-height class="pa-0 chatbox-container">
     <v-card
-      class="header rounded-0 px-3"
+      class="header rounded-0 px-3 align-start"
       elevation="0"
       color="rgb(245,245,245)"
     >
@@ -14,13 +14,13 @@
         </v-card-subtitle>
       </div>
       <v-spacer></v-spacer>
-      <v-btn small class="mr-2" dark color="like" elevation="0">
+      <v-btn x-small dark class="my-3 mr-2" color="like" elevation="3">
         223
-        <v-icon size="15">favorite</v-icon>
+        <v-icon right size="15">favorite</v-icon>
       </v-btn>
-      <v-btn small dark color="secondary" elevation="0">
+      <v-btn x-small class="my-3" color="secondary" elevation="3">
         5
-        <v-icon size="15">push_pin</v-icon>
+        <v-icon right size="15">push_pin</v-icon>
       </v-btn>
     </v-card>
 
@@ -253,6 +253,7 @@ export default {
   display: grid;
   grid-template-columns: 1fr min-content;
   grid-template-rows: min-content minmax(0, 1fr) min-content;
+  align-self: start;
 }
 .pin-box {
   grid-column: 1/-1;

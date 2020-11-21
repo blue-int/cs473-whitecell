@@ -1,6 +1,12 @@
 <template>
   <v-app>
-    <v-app-bar app v-bind="appBarScroll" class="px-0" elevation="0">
+    <v-app-bar
+      v-if="$route.name !== 'Room'"
+      app
+      v-bind="appBarScroll"
+      class="px-0"
+      elevation="0"
+    >
       <div class="d-flex align-center">
         <!-- <v-img
           alt="Vuetify Logo"
@@ -65,6 +71,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .goBack-btn {
-  margin-left: -16px;
+  margin-left: -12px;
 }
 </style>

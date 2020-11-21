@@ -40,6 +40,11 @@
         </vue-plyr>
       </v-col>
     </v-row> -->
+    <v-toolbar elevation="0" color="transparent" class="float-toolbar">
+      <v-btn icon dark class="goBack-btn" @click="leaveRoom()">
+        <v-icon>arrow_back</v-icon>
+      </v-btn>
+    </v-toolbar>
   </v-container>
 </template>
 
@@ -80,6 +85,9 @@ export default {
     this.unsubscribe()
   },
   methods: {
+    leaveRoom() {
+      this.$router.push('/lobby')
+    },
     updateViewers() {
       this.unsubscribe = this.roomRef
         .collection('viewers')
@@ -139,7 +147,7 @@ export default {
 <style lang="scss" scoped>
 .room-container {
   //hard coded.. fix soon
-  height: calc(100vh - 56px);
+  height: 100vh;
 
   display: grid;
   grid-template-rows: min-content minmax(0, 1fr);
@@ -149,5 +157,14 @@ export default {
   bottom: 56px;
   right: 0;
   z-index: 10;
+}
+.float-toolbar {
+  position: fixed;
+  top: 0px;
+  z-index: 10;
+}
+
+.goBack-btn {
+  margin-left: -12px;
 }
 </style>
