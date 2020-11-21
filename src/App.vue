@@ -10,7 +10,7 @@
           transition="scale-transition"
           width="40"
         /> -->
-        <v-btn icon @click="goBack()">
+        <v-btn class="goBack-btn" icon @click="goBack()">
           <v-icon>arrow_back</v-icon>
         </v-btn>
       </div>
@@ -63,9 +63,8 @@ export default {
   }
 }
 </script>
-<style lang="scss">
-.v-app-bar > .v-toolbar__content {
-  padding-left: 4px !important;
-  padding-right: 4px !important;
+<style lang="scss" scoped>
+.goBack-btn {
+  margin-left: -16px;
 }
 </style>

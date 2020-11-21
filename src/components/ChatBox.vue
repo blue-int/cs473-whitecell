@@ -2,7 +2,7 @@
   <v-container fluid fill-height class="pa-0 chatbox-container">
     <v-card
       class="header rounded-0 px-4"
-      elevation="3"
+      elevation="0"
       color="rgb(245,245,245)"
     >
       <div>
@@ -23,12 +23,13 @@
     </v-card>
 
     <v-card class="rounded-0 card" elevation="0" color="rgb(220,220,220)">
-      <v-card-title class="py-1">Most liked chats</v-card-title>
+      <v-divider v-if="pinList.length !== 0"></v-divider>
+      <!-- <v-card-title class="py-1">Most liked chats</v-card-title>
       <v-card-actions class="pa-0">
         <v-btn icon>
           <v-icon>keyboard_arrow_down</v-icon>
         </v-btn>
-      </v-card-actions>
+      </v-card-actions> -->
       <v-list class="py-0 pin-box" color="rgb(245,245,245)">
         <v-list-item v-for="pin in pinList" :key="pin.id" @click="like(pin)">
           <v-list-item-avatar
