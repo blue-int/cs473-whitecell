@@ -72,19 +72,22 @@
       </template>
     </v-virtual-scroll>
 
-    <v-toolbar elevation="3" class="pa-0" bottom color="rgb(245,245,245)">
-      <v-text-field
-        v-model="text"
-        label="Please chat"
-        type="text"
-        append-icon="send"
-        outlined
-        dense
-        hide-details
-        @keyup.enter="send()"
-        @click:append="send()"
-      />
-    </v-toolbar>
+    <v-card class="rounded-0" elevation="0">
+      <v-divider></v-divider>
+      <v-toolbar elevation="0" class="pa-0" bottom color="rgb(245,245,245)">
+        <v-text-field
+          v-model="text"
+          label="Please chat"
+          type="text"
+          append-icon="send"
+          outlined
+          dense
+          hide-details
+          @keyup.enter="send()"
+          @click:append="send()"
+        />
+      </v-toolbar>
+    </v-card>
     <v-btn
       class="ma-3 float-btn"
       elevation="12"
