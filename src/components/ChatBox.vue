@@ -1,15 +1,5 @@
 <template>
   <v-container fluid fill-height class="pa-0 chatbox-container">
-    <!-- <v-toolbar class="header" elevation="3" color="rgb(245,245,245)">
-      <v-icon color="primary">account_circle</v-icon>
-      <v-spacer></v-spacer>
-      <v-btn fab x-small class="mr-2" dark color="like" elevation="0">
-        <v-icon>favorite</v-icon>
-      </v-btn>
-      <v-btn fab x-small dark color="secondary" elevation="0">
-        <v-icon>push_pin</v-icon>
-      </v-btn>
-    </v-toolbar> -->
     <v-card
       class="header rounded-0 px-4"
       elevation="3"
@@ -81,24 +71,6 @@
       </template>
     </v-virtual-scroll>
 
-    <!-- <v-row no-gutters>
-      <v-col class="pin-box">
-        <v-row v-for="pin in pinList" :key="pin.id" class="px-2" no-gutters>
-          <v-col class="py-1" @click="like(pin)">
-            {{ pin.displayName }}: {{ pin.msg }} , likes:{{ pin.likes }}
-          </v-col>
-        </v-row>
-      </v-col>
-    </v-row>
-    <v-row no-gutters>
-      <v-col class="chat-box">
-        <v-row v-for="chat in chatList" :key="chat.id" class="px-2" no-gutters>
-          <v-col class="py-1" @click="like(chat)">
-            {{ chat.displayName }}: {{ chat.msg }} likes:{{ chat.likes }}
-          </v-col>
-        </v-row>
-      </v-col>
-    </v-row> -->
     <v-toolbar elevation="3" class="pa-0" bottom color="rgb(245,245,245)">
       <v-text-field
         v-model="text"
