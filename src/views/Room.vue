@@ -23,7 +23,7 @@
         clear
       </v-icon>
     </v-btn>
-    <v-row
+    <!-- <v-row
       v-for="name in viewers"
       :key="name.id"
       class="px-2"
@@ -31,7 +31,7 @@
       @click="banUser(name.uid)"
     >
       <v-col class="py-1"> Ban| {{ name.displayName }} </v-col>
-    </v-row>
+    </v-row> -->
     <ChatBox />
     <!-- <v-row>
       <v-col>
