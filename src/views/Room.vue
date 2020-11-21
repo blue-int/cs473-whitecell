@@ -73,39 +73,20 @@ export default {
     } else {
       this.title = doc.data().title
       this.master = doc.data().master
-      this.updateViewers()
-    }
-  },
-  destroyed() {
-    this.unsubList.forEach(unsub => unsub())
-  },
-  methods: {
-    updateViewers() {
       const unsub = this.roomRef.collection('viewers').onSnapshot(snapshot => {
         this.viewers = snapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
         }))
       })
-      this.unsubList.push(unsub)
-    },
-    // TODO: should be replaced to cloud functions trigger
+      this.unsubList = [unsub]
+    }
+  },
+  destroyed() {
+    this.unsubList.forEach(unsub => unsub())
+  },
+  methods: {
     async stopStream() {
-      const viewersRef = this.roomRef.collection('viewers')
-      const chatsRef = this.roomRef.collection('chatList')
-
-      await Promise.all([
-        viewersRef.onSnapshot(snapshot => {
-          snapshot.docs.forEach(doc => {
-            doc.ref.delete()
-          })
-        }),
-        chatsRef.onSnapshot(snapshot => {
-          snapshot.docs.forEach(doc => {
-            doc.ref.delete()
-          })
-        })
-      ])
       this.roomRef.delete()
       this.$router.push('/lobby')
     }
