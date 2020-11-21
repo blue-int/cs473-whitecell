@@ -169,29 +169,32 @@ export default {
         timeCreated: firebase.firestore.FieldValue.serverTimestamp(),
         msg: this.text,
         likes: 0,
+        fans: [],
         pinned: false
       })
       this.text = ''
     },
     like(chat) {
+      // if (chat.fans.includes(this.currentUser.uid) === true) return
       this.roomRef
         .collection('chatList')
         .doc(chat.id)
         .update({
           likes: firebase.firestore.FieldValue.increment(1),
+          fans: firebase.firestore.FieldValue.arrayUnion(this.currentUser.uid),
           pinned: this.pinned(chat)
         })
     },
     pinned(chat) {
       if (
         chat.likes >= 5 &&
-        (this.pinList.includes(chat) ||
+        (chat.pinned === true ||
           this.pinList.length < 3 ||
           this.importance(this.pinList[this.pinList.length - 1]) <
             this.importance(chat))
-      ) {
+      )
         return true
-      } else return false
+      else return false
     },
     showdummy() {
       this.stopdummy = setInterval(() => {
