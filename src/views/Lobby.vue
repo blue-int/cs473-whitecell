@@ -34,7 +34,7 @@
       <!-- <v-avatar color="primary" size="48"></v-avatar> -->
       <v-card-title class="pa-3">{{ room.title }}</v-card-title>
       <v-card-subtitle class="px-3 pb-3">
-        {{ room.master }} · 1234viewers
+        {{ room.hostName }} · {{ room.viewers }} viewers
       </v-card-subtitle>
     </v-card>
   </v-container>
@@ -76,8 +76,11 @@ export default {
       try {
         const newRoom = {
           title: 'Hi everyone!',
-          master: 'KST',
-          timeCreated: firebase.firestore.FieldValue.serverTimestamp()
+          hostName: firebase.auth().currentUser.displayName,
+          hostUid: firebase.auth().currentUser.uid,
+          banListUid: [],
+          timeCreated: firebase.firestore.FieldValue.serverTimestamp(),
+          viewers: 0
         }
         const docRef = await db.collection('lobby').add(newRoom)
 
