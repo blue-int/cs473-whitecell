@@ -187,11 +187,12 @@ export default {
         })
     },
     pinned(chat) {
-      if (chat.likes < 5 || this.pinList.includes(chat)) return false
-      else if (
-        this.pinList.length < 3 ||
-        this.importance(this.pinList[this.pinList.length - 1]) <
-          this.importance(chat)
+      if (
+        chat.likes >= 5 &&
+        (this.pinList.includes(chat) ||
+          this.pinList.length < 3 ||
+          this.importance(this.pinList[this.pinList.length - 1]) <
+            this.importance(chat))
       ) {
         return true
       } else return false
