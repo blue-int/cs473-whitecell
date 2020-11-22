@@ -34,7 +34,7 @@
         <v-col class="py-1"> Ban| {{ name.displayName }} </v-col>
       </v-row>
     </v-card>
-    <ChatBox />
+    <ChatBox :host-uid="hostUid" />
     <!-- <v-row>
       <v-col>
         <vue-plyr>
@@ -72,7 +72,7 @@ export default {
     return {
       title: '',
       hostName: '',
-      hoseUid: null,
+      hostUid: null,
       viewers: [],
       unsubList: []
     }
@@ -117,48 +117,19 @@ export default {
   },
   methods: {
     banUser(banUid) {
-      if (firebase.auth().currentUser.uid != this.hostUid) {
+      if (firebase.auth().currentUser.uid !== this.hostUid) {
         alert('You are not host!')
         return
+      } else if (banUid === this.hostUid) {
+        alert('You cannot ban yourself!')
+        return
       }
-      // const banUID = this.viewers.find(user => {
-      //   return user.displayName === userName
-      // }) // find uid from viewers via userName
 
       this.roomRef.update({
         banListUid: firebase.firestore.FieldValue.arrayUnion(banUid)
       })
     },
 
-    banChat(targetChat) {
-      if (firebase.auth().currentUser.uid != this.hostUid) {
-        alert('You are not host!')
-        return
-      }
-
-      db.collection('lobby')
-        .doc(this.$route.params.id)
-        .collection('chatList')
-        .doc(targetChat.id)
-        .update({
-          msg: 'This message has deleted',
-          likes: 0,
-          pinned: false
-        })
-
-      // Ban chatter & fans
-
-      this.roomRef.update({
-        banListUid: firebase.firestore.FieldValue.arrayUnion(targetChat.uid)
-      })
-      while (targetChat.fans.length > 0) {
-        this.roomRef.update({
-          banListUid: firebase.firestore.FieldValue.arrayUnion(
-            targetChat.fans.pop()
-          )
-        })
-      }
-    },
     async stopStream() {
       this.roomRef.delete()
       this.$router.push('/lobby')
