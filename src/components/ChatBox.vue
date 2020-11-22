@@ -1,8 +1,8 @@
 <template>
   <v-container fluid fill-height class="pa-0 chatbox-container">
     <v-card
-      class="header rounded-0 px-4"
-      elevation="3"
+      class="header rounded-0 px-3 align-start"
+      elevation="0"
       color="rgb(245,245,245)"
     >
       <div>
@@ -14,36 +14,44 @@
         </v-card-subtitle>
       </div>
       <v-spacer></v-spacer>
-      <v-btn fab x-small class="mr-2" dark color="like" elevation="0">
-        <v-icon>favorite</v-icon>
+      <v-btn x-small dark class="my-3 mr-2" color="like" elevation="3">
+        223
+        <v-icon right size="15">favorite</v-icon>
       </v-btn>
-      <v-btn fab x-small dark color="secondary" elevation="0">
-        <v-icon>push_pin</v-icon>
+      <v-btn x-small class="my-3" color="secondary" elevation="3">
+        5
+        <v-icon right size="15">push_pin</v-icon>
       </v-btn>
     </v-card>
 
     <v-card class="rounded-0 card" elevation="0" color="rgb(220,220,220)">
-      <v-card-title class="py-1">Most liked chats</v-card-title>
-      <v-card-actions class="pa-0">
-        <v-btn icon>
-          <v-icon>keyboard_arrow_down</v-icon>
-        </v-btn>
-      </v-card-actions>
+      <v-divider v-if="pinList.length !== 0"></v-divider>
       <v-list class="py-0 pin-box" color="rgb(245,245,245)">
-        <v-list-item v-for="pin in pinList" :key="pin.id" @click="like(pin)">
+        <v-list-item
+          v-for="pin in pinList"
+          :key="pin.id"
+          class="pin-chat px-3"
+          @click="like(pin)"
+        >
           <v-list-item-avatar
             color="primary"
-            size="24"
-            class="my-2"
+            size="20"
+            class="my-3 mr-3"
           ></v-list-item-avatar>
-          <v-list-item-content>
-            <v-list-item-title>
+          <v-list-item-content class="list-content py-0">
+            <v-list-item-title class="my-0 mr-1">
               <span class="font-weight-bold">
                 {{ pin.displayName }}
               </span>
               <span class="font-weight-light">
-                {{ pin.msg }} , likes:{{ pin.likes }}
+                {{ pin.msg }}
               </span>
+            </v-list-item-title>
+            <v-list-item-title class="like--text">
+              {{ pin.likes }}
+              <v-icon color="like" size="15" class="icon"
+                >favorite_border</v-icon
+              >
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -53,16 +61,26 @@
 
     <v-virtual-scroll :items="chatList" item-height="44" class="chat-box">
       <template v-slot:default="{ item }">
-        <v-list-item :key="item.id" class="chat" @click="like(item)">
-          <v-list-item-avatar color="primary" size="24"></v-list-item-avatar>
-          <v-list-item-content>
-            <v-list-item-title>
+        <v-list-item :key="item.id" class="chat px-3" @click="like(item)">
+          <v-list-item-avatar
+            color="primary"
+            size="20"
+            class="my-3 mr-3"
+          ></v-list-item-avatar>
+          <v-list-item-content class="list-content">
+            <v-list-item-title class="my-0 mr-1">
               <span class="font-weight-bold">
                 {{ item.displayName }}
               </span>
               <span class="font-weight-light">
-                {{ item.msg }} , likes:{{ item.likes }}
+                {{ item.msg }}
               </span>
+            </v-list-item-title>
+            <v-list-item-title class="like--text">
+              {{ item.likes }}
+              <v-icon color="like" size="15" class="icon"
+                >favorite_border</v-icon
+              >
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -71,19 +89,22 @@
       </template>
     </v-virtual-scroll>
 
-    <v-toolbar elevation="3" class="pa-0" bottom color="rgb(245,245,245)">
-      <v-text-field
-        v-model="text"
-        label="Please chat"
-        type="text"
-        append-icon="send"
-        outlined
-        dense
-        hide-details
-        @keyup.enter="send()"
-        @click:append="send()"
-      />
-    </v-toolbar>
+    <v-card class="rounded-0" elevation="0">
+      <v-divider></v-divider>
+      <v-toolbar elevation="0" class="pa-0" bottom color="rgb(245,245,245)">
+        <v-text-field
+          v-model="text"
+          label="Please chat"
+          type="text"
+          append-icon="send"
+          outlined
+          dense
+          hide-details
+          @keyup.enter="send()"
+          @click:append="send()"
+        />
+      </v-toolbar>
+    </v-card>
     <v-btn
       class="ma-3 float-btn"
       elevation="12"
@@ -244,6 +265,7 @@ export default {
   display: grid;
   grid-template-columns: 1fr min-content;
   grid-template-rows: min-content minmax(0, 1fr) min-content;
+  align-self: start;
 }
 .pin-box {
   grid-column: 1/-1;
@@ -253,5 +275,12 @@ export default {
   bottom: 100px;
   right: 0;
   z-index: 10;
+}
+.list-content {
+  display: grid;
+  grid-template-columns: 1fr min-content;
+}
+.icon {
+  padding-bottom: 2px;
 }
 </style>
