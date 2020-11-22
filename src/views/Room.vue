@@ -23,7 +23,7 @@
         clear
       </v-icon>
     </v-btn>
-    <!-- <v-row
+    <v-row
       v-for="name in viewers"
       :key="name.id"
       class="px-2"
@@ -31,7 +31,7 @@
       @click="banUser(name.uid)"
     >
       <v-col class="py-1"> Ban| {{ name.displayName }} </v-col>
-    </v-row> -->
+    </v-row>
     <ChatBox />
     <!-- <v-row>
       <v-col>
@@ -83,14 +83,12 @@ export default {
   async created() {
     const banSnapshot = this.roomRef.onSnapshot(async doc => {
       if (doc.data().banListUid.includes(firebase.auth().currentUser.uid)) {
-        setTimeout(() => {
-          if (!alert('You are banned!!')) {
-            this.$router.push('/lobby')
-          }
-        }, 0)
+        alert('You are banned!!')
+        this.$router.push('/lobby')
       }
     })
     this.unsubList.push(banSnapshot)
+
     const doc = await this.roomRef.get()
     if (!doc.exists) {
       alert('The room does not exists')
@@ -99,17 +97,18 @@ export default {
       this.title = doc.data().title
       this.hostName = doc.data().hostName
       this.hostUid = doc.data().hostUid
-
-      const viewerSnapshot = this.roomRef
-        .collection('viewers')
-        .onSnapshot(snapshot => {
-          this.viewers = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-          }))
-        })
-      this.unsubList.push(viewerSnapshot)
     }
+  },
+  mounted() {
+    const viewerSnapshot = this.roomRef
+      .collection('viewers')
+      .onSnapshot(snapshot => {
+        this.viewers = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }))
+      })
+    this.unsubList.push(viewerSnapshot)
   },
   destroyed() {
     this.unsubList.forEach(unsub => unsub())
@@ -196,9 +195,13 @@ export default {
   beforeRouteLeave: (to, from, next) => {
     const roomRef = db.collection('lobby').doc(from.params.id)
 
-    roomRef.update({
-      viewers: firebase.firestore.FieldValue.increment(-1)
-    })
+    roomRef
+      .update({
+        viewers: firebase.firestore.FieldValue.increment(-1)
+      })
+      .catch(() => {
+        // console.log('Stop Stream')
+      })
     roomRef
       .collection('viewers')
       .doc(firebase.auth().currentUser.uid)
