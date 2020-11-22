@@ -136,7 +136,8 @@ export default {
       text: '',
       stopdummy: null,
       currentUser: firebase.auth().currentUser,
-      viewers: 0
+      viewers: 0,
+      decay: null
     }
   },
   computed: {
@@ -175,6 +176,23 @@ export default {
         this.viewers = snapshot.size
       })
     ]
+  },
+  mounted() {
+    this.decay = setInterval(() => {
+      if (this.pinList.length !== 0) {
+        if (
+          this.importance(this.pinList[this.pinList.length - 1]) <
+          firebase.firestore.Timestamp.now().seconds - 30
+        ) {
+          this.roomRef
+            .collection('chatList')
+            .doc(this.pinList[this.pinList.length - 1].id)
+            .update({
+              pinned: false
+            })
+        }
+      }
+    }, 100)
   },
   updated() {
     const chatBox = this.$el.querySelector('.chat-box')
@@ -218,7 +236,8 @@ export default {
         (chat.pinned === true ||
           this.pinList.length < 3 ||
           this.importance(this.pinList[this.pinList.length - 1]) <
-            this.importance(chat))
+            this.importance(chat)) &&
+        this.importance(chat) > firebase.firestore.Timestamp.now().seconds - 30
       )
         return true
       else return false
