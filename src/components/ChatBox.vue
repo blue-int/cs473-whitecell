@@ -60,7 +60,7 @@
     </v-card>
 
     <v-virtual-scroll :items="chatList" item-height="44" class="chat-box">
-      <template v-slot:default="{ item }">
+      <template v-slot:default="{ index, item }">
         <v-list-item :key="item.id" class="chat px-3" @click="like(item)">
           <v-list-item-avatar
             color="primary"
@@ -85,7 +85,7 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-divider></v-divider>
+        <v-divider v-if="index !== chatList.length - 1"></v-divider>
       </template>
     </v-virtual-scroll>
 
@@ -136,7 +136,8 @@ export default {
       stopDummy: null,
       currentUser: firebase.auth().currentUser,
       viewers: 0,
-      decay: null
+      decay: null,
+      stickBottom: true
     }
   },
   computed: {
@@ -190,10 +191,18 @@ export default {
           })
       }
     }, 100)
+    const chatBox = this.$el.querySelector('.chat-box')
+    chatBox.onscroll = () => {
+      if (chatBox.scrollHeight !== chatBox.scrollTop + chatBox.clientHeight) {
+        this.stickBottom = false
+      } else {
+        this.stickBottom = true
+      }
+    }
   },
   updated() {
     const chatBox = this.$el.querySelector('.chat-box')
-    chatBox.scrollTop = chatBox.scrollHeight
+    if (this.stickBottom === true) chatBox.scrollTop = chatBox.scrollHeight
   },
   destroyed() {
     clearInterval(this.stopDummy)
@@ -214,6 +223,7 @@ export default {
         pinned: false,
         deleted: false
       })
+      this.stickBottom = true
       this.text = ''
     },
     like(chat) {
