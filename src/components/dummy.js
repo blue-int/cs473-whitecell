@@ -6,7 +6,8 @@ export const dummyChats = [
     msg: '?',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -15,7 +16,8 @@ export const dummyChats = [
     msg: '??',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -24,7 +26,8 @@ export const dummyChats = [
     msg: '제발',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -33,7 +36,8 @@ export const dummyChats = [
     msg: '다들 잘가',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -42,7 +46,8 @@ export const dummyChats = [
     msg: 'ㅅㄱ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -51,7 +56,8 @@ export const dummyChats = [
     msg: '밴 ㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -60,7 +66,8 @@ export const dummyChats = [
     msg: '죽는다',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -69,7 +76,8 @@ export const dummyChats = [
     msg: '컽',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -78,7 +86,8 @@ export const dummyChats = [
     msg: '?',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -87,7 +96,8 @@ export const dummyChats = [
     msg: '머함',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -96,7 +106,8 @@ export const dummyChats = [
     msg: '움직임을 멈추셨네',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -105,7 +116,8 @@ export const dummyChats = [
     msg: '밴하느라 ㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -114,7 +126,8 @@ export const dummyChats = [
     msg: '??',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -123,7 +136,8 @@ export const dummyChats = [
     msg: '히이익',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -132,7 +146,8 @@ export const dummyChats = [
     msg: '다죽네',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -141,7 +156,8 @@ export const dummyChats = [
     msg: '?',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -150,7 +166,8 @@ export const dummyChats = [
     msg: '아 세로로 엄준식을~',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -159,7 +176,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -168,7 +186,8 @@ export const dummyChats = [
     msg: '처형?',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -177,7 +196,8 @@ export const dummyChats = [
     msg: '?',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -186,7 +206,8 @@ export const dummyChats = [
     msg: '뭐야',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -195,7 +216,8 @@ export const dummyChats = [
     msg: '힘내 돌거북',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -204,7 +226,8 @@ export const dummyChats = [
     msg: '어그로 끌린놈들이 넘많아',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -213,7 +236,8 @@ export const dummyChats = [
     msg: '딸깍딸깍',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -222,7 +246,8 @@ export const dummyChats = [
     msg: '악질 놈들 다 검거 완료 다 나가',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -231,7 +256,8 @@ export const dummyChats = [
     msg: '이렐죽는다',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -240,7 +266,8 @@ export const dummyChats = [
     msg: '딸깍',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -249,7 +276,8 @@ export const dummyChats = [
     msg: '헐',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -258,7 +286,8 @@ export const dummyChats = [
     msg: 'ㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -267,7 +296,8 @@ export const dummyChats = [
     msg: '졸업 ㅊㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -276,7 +306,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -285,7 +316,8 @@ export const dummyChats = [
     msg: '??',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -294,7 +326,8 @@ export const dummyChats = [
     msg: '선생님',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -303,7 +336,8 @@ export const dummyChats = [
     msg: '언년이야!!!',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -312,7 +346,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -321,7 +356,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -330,7 +366,8 @@ export const dummyChats = [
     msg: '파카님 주거요~',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -339,7 +376,8 @@ export const dummyChats = [
     msg: '딸깍',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -348,7 +386,8 @@ export const dummyChats = [
     msg: '죽으면 레전드 ㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -357,7 +396,8 @@ export const dummyChats = [
     msg: '돌거북',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -366,7 +406,8 @@ export const dummyChats = [
     msg: '"딸깍"',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -375,7 +416,8 @@ export const dummyChats = [
     msg: '선생님 죽어요',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -384,7 +426,8 @@ export const dummyChats = [
     msg: '죽어라죽어라',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -393,7 +436,8 @@ export const dummyChats = [
     msg: '선생님 죽어요',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -402,7 +446,8 @@ export const dummyChats = [
     msg: '설마 다죽임?',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -411,7 +456,8 @@ export const dummyChats = [
     msg: '어어',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -420,7 +466,8 @@ export const dummyChats = [
     msg: '돌거북 화이팅',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -429,7 +476,8 @@ export const dummyChats = [
     msg: 'ㄴㄴㄱ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -438,7 +486,8 @@ export const dummyChats = [
     msg: '콩쥐팥쥐괴물쥐 -> 특수문자 도배에 주의해주세요. [경고]',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -447,7 +496,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -456,7 +506,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -465,7 +516,8 @@ export const dummyChats = [
     msg: '무차별폭격',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -474,7 +526,8 @@ export const dummyChats = [
     msg: '주거요!!',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -483,7 +536,8 @@ export const dummyChats = [
     msg: '뭐하긴 니네 다 쳐내는중이지 ㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -492,7 +546,8 @@ export const dummyChats = [
     msg: '죽어요~~',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -501,7 +556,8 @@ export const dummyChats = [
     msg: '죽어요 선생님',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -510,7 +566,8 @@ export const dummyChats = [
     msg: '졸업 ㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -519,7 +576,8 @@ export const dummyChats = [
     msg: '선생님죿어요',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -528,7 +586,8 @@ export const dummyChats = [
     msg: '어어',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -537,7 +596,8 @@ export const dummyChats = [
     msg: '칼춤ON',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -546,7 +606,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -555,7 +616,8 @@ export const dummyChats = [
     msg: '응애',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -564,7 +626,8 @@ export const dummyChats = [
     msg: '죽는다 ㅋㅋㅋㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -573,7 +636,8 @@ export const dummyChats = [
     msg: '죽겠는데?',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -582,7 +646,8 @@ export const dummyChats = [
     msg: '?????',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -591,7 +656,8 @@ export const dummyChats = [
     msg: '죽어',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -600,7 +666,8 @@ export const dummyChats = [
     msg: '처형당하겟다',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -609,7 +676,8 @@ export const dummyChats = [
     msg: '어?',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -618,7 +686,8 @@ export const dummyChats = [
     msg: '골렘에게 죽을사람',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -627,7 +696,8 @@ export const dummyChats = [
     msg: '떨마',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -636,7 +706,8 @@ export const dummyChats = [
     msg: '댕겅댕겅',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -645,7 +716,8 @@ export const dummyChats = [
     msg: '나죽어',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -654,7 +726,8 @@ export const dummyChats = [
     msg: '죽어요',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -663,7 +736,8 @@ export const dummyChats = [
     msg: '????',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -672,7 +746,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -681,7 +756,8 @@ export const dummyChats = [
     msg: '오잉?',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -690,7 +766,8 @@ export const dummyChats = [
     msg: '죽어요',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -699,7 +776,8 @@ export const dummyChats = [
     msg: '?',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -708,7 +786,8 @@ export const dummyChats = [
     msg: '이걸?',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -717,7 +796,8 @@ export const dummyChats = [
     msg: '거북이 개빡딜',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -726,7 +806,8 @@ export const dummyChats = [
     msg: '어?',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -735,7 +816,8 @@ export const dummyChats = [
     msg: '돌커북 1/0/0',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -744,7 +826,8 @@ export const dummyChats = [
     msg: '컽컽컽',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -753,7 +836,8 @@ export const dummyChats = [
     msg: '죽겠다',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -762,7 +846,8 @@ export const dummyChats = [
     msg: 'wnrdjt',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -771,7 +856,8 @@ export const dummyChats = [
     msg: '?',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -780,7 +866,8 @@ export const dummyChats = [
     msg: '어뷰임?? ?????????????????',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -789,7 +876,8 @@ export const dummyChats = [
     msg: '컽',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -798,7 +886,8 @@ export const dummyChats = [
     msg: 'ㅂㅂ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -807,7 +896,8 @@ export const dummyChats = [
     msg: '선생님',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -816,7 +906,8 @@ export const dummyChats = [
     msg: '안대',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -825,7 +916,8 @@ export const dummyChats = [
     msg: '죽는다',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -834,7 +926,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -843,7 +936,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -852,7 +946,8 @@ export const dummyChats = [
     msg: '캬',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -861,7 +956,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -870,7 +966,8 @@ export const dummyChats = [
     msg: '?',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -879,7 +976,8 @@ export const dummyChats = [
     msg: '?',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -888,7 +986,8 @@ export const dummyChats = [
     msg: '자~ 드가자~',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -897,7 +996,8 @@ export const dummyChats = [
     msg: '?',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -906,7 +1006,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -915,7 +1016,8 @@ export const dummyChats = [
     msg: '팍넛ㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -924,7 +1026,8 @@ export const dummyChats = [
     msg: '다죽네',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -933,7 +1036,8 @@ export const dummyChats = [
     msg: '처형',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -942,7 +1046,8 @@ export const dummyChats = [
     msg: '간다!',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -951,7 +1056,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -960,7 +1066,8 @@ export const dummyChats = [
     msg: '?',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -969,7 +1076,8 @@ export const dummyChats = [
     msg: '형..',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -978,7 +1086,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -987,7 +1096,8 @@ export const dummyChats = [
     msg: '????',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -996,7 +1106,8 @@ export const dummyChats = [
     msg: '죽어요',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1005,7 +1116,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1014,7 +1126,8 @@ export const dummyChats = [
     msg: '?',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1023,7 +1136,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1032,7 +1146,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1041,7 +1156,8 @@ export const dummyChats = [
     msg: '어',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1050,7 +1166,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1059,7 +1176,8 @@ export const dummyChats = [
     msg: '재규어는빠르다 -> 특수문자 도배에 주의해주세요. [경고]',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1068,7 +1186,8 @@ export const dummyChats = [
     msg: '??',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1077,7 +1196,8 @@ export const dummyChats = [
     msg: '>',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1086,7 +1206,8 @@ export const dummyChats = [
     msg: 'zzzzzzzzzzzzzzzzzzzzzzz',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1095,7 +1216,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1104,7 +1226,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1113,7 +1236,8 @@ export const dummyChats = [
     msg: 'zjt',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1122,7 +1246,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1131,7 +1256,8 @@ export const dummyChats = [
     msg: '????????',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1140,7 +1266,8 @@ export const dummyChats = [
     msg: '안돼!!!!!!!!!!!!!!!!!',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1149,7 +1276,8 @@ export const dummyChats = [
     msg: '선생님?',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1158,7 +1286,8 @@ export const dummyChats = [
     msg: '앗...',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1167,7 +1296,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1176,7 +1306,8 @@ export const dummyChats = [
     msg: '?',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1185,7 +1316,8 @@ export const dummyChats = [
     msg: '??',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1194,7 +1326,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1203,7 +1336,8 @@ export const dummyChats = [
     msg: '컽',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1212,7 +1346,8 @@ export const dummyChats = [
     msg: '이사람 트롤인가요?',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1221,7 +1356,8 @@ export const dummyChats = [
     msg: '??????',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1230,7 +1366,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1239,7 +1376,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1248,7 +1386,8 @@ export const dummyChats = [
     msg: '휠체어 넘어졌네',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1257,7 +1396,8 @@ export const dummyChats = [
     msg: 'ㄷㄷ?',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1266,7 +1406,8 @@ export const dummyChats = [
     msg: '으악',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1275,7 +1416,8 @@ export const dummyChats = [
     msg: '????',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1284,7 +1426,8 @@ export const dummyChats = [
     msg: '황거북 ㄷㄷ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1293,7 +1436,8 @@ export const dummyChats = [
     msg: '억..',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1302,7 +1446,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1311,7 +1456,8 @@ export const dummyChats = [
     msg: '?',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1320,7 +1466,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1329,7 +1476,8 @@ export const dummyChats = [
     msg: '?',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1338,7 +1486,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1347,7 +1496,8 @@ export const dummyChats = [
     msg: '이거지',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1356,7 +1506,8 @@ export const dummyChats = [
     msg: '응애!',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1365,7 +1516,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1374,7 +1526,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1383,7 +1536,8 @@ export const dummyChats = [
     msg: '??? 머함',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1392,7 +1546,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋㅋㅋㅋㄴ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1401,7 +1556,8 @@ export const dummyChats = [
     msg: '?',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1410,7 +1566,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1419,7 +1576,8 @@ export const dummyChats = [
     msg: '밴하느라 처형 ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1428,7 +1586,8 @@ export const dummyChats = [
     msg: '휠체어 넘어짐??',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1437,7 +1596,8 @@ export const dummyChats = [
     msg: '와 ㄷㄷ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1446,7 +1606,8 @@ export const dummyChats = [
     msg: '????????????',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1455,7 +1616,8 @@ export const dummyChats = [
     msg: '어디감',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1464,7 +1626,8 @@ export const dummyChats = [
     msg: '???????????????',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1473,7 +1636,8 @@ export const dummyChats = [
     msg: '팅이다',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1482,7 +1646,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1491,7 +1656,8 @@ export const dummyChats = [
     msg: '팀원이 핑을 찍어버렸네요',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1500,7 +1666,8 @@ export const dummyChats = [
     msg: '딸각딸각',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1509,7 +1676,8 @@ export const dummyChats = [
     msg: '???',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1518,7 +1686,8 @@ export const dummyChats = [
     msg: '컽',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1527,7 +1696,8 @@ export const dummyChats = [
     msg: '킹거북',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1536,7 +1706,8 @@ export const dummyChats = [
     msg: '"물음표핑"',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1545,7 +1716,8 @@ export const dummyChats = [
     msg: '??',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1554,7 +1726,8 @@ export const dummyChats = [
     msg: '?????????',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1563,7 +1736,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1572,7 +1746,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋ선생님 머하세여 ㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1581,7 +1756,8 @@ export const dummyChats = [
     msg: '선생님 죽어요',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1590,7 +1766,8 @@ export const dummyChats = [
     msg: '???',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1599,7 +1776,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1608,7 +1786,8 @@ export const dummyChats = [
     msg: '와난',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1617,7 +1796,8 @@ export const dummyChats = [
     msg: '응애',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1626,7 +1806,8 @@ export const dummyChats = [
     msg: '??????????',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1635,7 +1816,8 @@ export const dummyChats = [
     msg: 'ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1644,7 +1826,8 @@ export const dummyChats = [
     msg: 'ㅈㄷㄹㅇ',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1653,7 +1836,8 @@ export const dummyChats = [
     msg: '어...뷰,...',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   },
   {
     uid: 'dummy',
@@ -1662,6 +1846,7 @@ export const dummyChats = [
     msg: '무슨일인데 그럼?',
     likes: 0,
     fans: [],
-    pinned: false
+    pinned: false,
+    delete: false
   }
 ]
