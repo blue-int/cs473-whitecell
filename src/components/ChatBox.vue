@@ -179,18 +179,17 @@ export default {
   },
   mounted() {
     this.decay = setInterval(() => {
-      if (this.pinList.length !== 0) {
-        if (
-          this.importance(this.pinList[this.pinList.length - 1]) <
-          firebase.firestore.Timestamp.now().seconds - 30
-        ) {
-          this.roomRef
-            .collection('chatList')
-            .doc(this.pinList[this.pinList.length - 1].id)
-            .update({
-              pinned: false
-            })
-        }
+      if (this.pinList.length === 0) return
+      if (
+        this.importance(this.pinList[this.pinList.length - 1]) <
+        firebase.firestore.Timestamp.now().seconds - 30
+      ) {
+        this.roomRef
+          .collection('chatList')
+          .doc(this.pinList[this.pinList.length - 1].id)
+          .update({
+            pinned: false
+          })
       }
     }, 100)
   },
@@ -231,12 +230,12 @@ export default {
         })
     },
     pinned(chat) {
+      if (chat.likes < 5) return false
+      if (chat.pinned === true) return true
+      if (this.pinList.length < 3) return true
       if (
-        chat.likes >= 5 &&
-        (chat.pinned === true ||
-          this.pinList.length < 3 ||
-          this.importance(this.pinList[this.pinList.length - 1]) <
-            this.importance(chat)) &&
+        this.importance(this.pinList[this.pinList.length - 1]) <
+          this.importance(chat) &&
         this.importance(chat) > firebase.firestore.Timestamp.now().seconds - 30
       )
         return true
@@ -250,7 +249,6 @@ export default {
         })
       }
     },
-
     showdummy() {
       this.stopdummy = setInterval(() => {
         if (this.dummyChats.length === 0) {
