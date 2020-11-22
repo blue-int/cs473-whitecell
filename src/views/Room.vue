@@ -23,6 +23,15 @@
         clear
       </v-icon>
     </v-btn>
+    <!-- <v-row
+      v-for="name in viewers"
+      :key="name.id"
+      class="px-2"
+      no-gutters
+      @click="banUser(name.uid)"
+    >
+      <v-col class="py-1"> Ban| {{ name.displayName }} </v-col>
+    </v-row> -->
     <ChatBox />
     <!-- <v-row>
       <v-col>
@@ -60,7 +69,8 @@ export default {
   data() {
     return {
       title: '',
-      master: '',
+      hostName: '',
+      hoseUid: null,
       viewers: [],
       unsubList: []
     }
@@ -77,25 +87,82 @@ export default {
       this.$router.push('/lobby')
     } else {
       this.title = doc.data().title
-      this.master = doc.data().master
-      const unsub = this.roomRef.collection('viewers').onSnapshot(snapshot => {
-        this.viewers = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }))
-      })
-      this.unsubList = [unsub]
+      this.hostName = doc.data().hostName
+      this.hostUid = doc.data().hostUid
+      this.unsubList = [
+        this.roomRef.collection('viewers').onSnapshot(snapshot => {
+          this.viewers = snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          }))
+        }),
+        this.roomRef.onSnapshot(async doc => {
+          if (doc.data().banListUid.includes(firebase.auth().currentUser.uid)) {
+            setTimeout(() => {
+              if (!alert('You are banned!!')) {
+                this.$router.push('/lobby')
+              }
+            }, 0)
+          }
+        })
+      ]
     }
   },
   destroyed() {
     this.unsubList.forEach(unsub => unsub())
   },
   methods: {
+    banUser(banUID) {
+      /*
+      if (firebase.auth().currentUser.uid != this.hostUid) {
+        alert('You are not host!')
+        return
+      }
+      const banUID = this.viewers.find(user => {
+        return user.displayName === userName
+      }) // find uid from viewers via userName
+      */
+
+      this.roomRef.update({
+        banListUid: firebase.firestore.FieldValue.arrayUnion(banUID)
+      })
+    },
+
+    banChat(targetChat) {
+      if (firebase.auth().currentUser.uid != this.hostUid) {
+        alert('You are not host!')
+        return
+      }
+
+      db.collection('lobby')
+        .doc(this.$route.params.id)
+        .collection('chatList')
+        .doc(targetChat.id)
+        .update({
+          msg: 'This message has deleted',
+          likes: 0,
+          pinned: false
+        })
+
+      // Ban chatter & fans
+
+      this.roomRef.update({
+        banListUid: firebase.firestore.FieldValue.arrayUnion(targetChat.uid)
+      })
+      while (targetChat.fans.length > 0) {
+        this.roomRef.update({
+          banListUid: firebase.firestore.FieldValue.arrayUnion(
+            targetChat.fans.pop()
+          )
+        })
+      }
+    },
     async stopStream() {
       this.roomRef.delete()
       this.$router.push('/lobby')
     }
   },
+
   beforeRouteEnter: (to, from, next) => {
     const currentUser = firebase.auth().currentUser
     const userInfo = {
@@ -104,19 +171,38 @@ export default {
       photoURL: currentUser.photoURL,
       email: currentUser.email
     }
-    db.collection('lobby')
-      .doc(to.params.id)
+    const roomRef = db.collection('lobby').doc(to.params.id)
+
+    // let subscribe = roomRef.onSnapshot(doc => {
+    //   if (doc.data().banListUid.includes(firebase.auth().currentUser.uid)) {
+    //     alert('You are banned!!')
+    //     subscribe()
+    //     next('/lobby')
+    //     return
+    //   }
+    // })
+    // })
+
+    roomRef
       .collection('viewers')
       .doc(userInfo.uid)
       .set(userInfo)
+    roomRef.update({
+      viewers: firebase.firestore.FieldValue.increment(1)
+    })
     next()
   },
   beforeRouteLeave: (to, from, next) => {
-    db.collection('lobby')
-      .doc(from.params.id)
+    const roomRef = db.collection('lobby').doc(from.params.id)
+
+    roomRef.update({
+      viewers: firebase.firestore.FieldValue.increment(-1)
+    })
+    roomRef
       .collection('viewers')
       .doc(firebase.auth().currentUser.uid)
       .delete()
+
     next()
   }
 }

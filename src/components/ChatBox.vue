@@ -10,7 +10,7 @@
           Live Chat
         </v-card-title>
         <v-card-subtitle class="px-0 py-2">
-          8k viewers
+          {{ viewers }} viewers
         </v-card-subtitle>
       </div>
       <v-spacer></v-spacer>
@@ -135,7 +135,8 @@ export default {
       unsubscribe: [],
       text: '',
       stopdummy: null,
-      currentUser: firebase.auth().currentUser
+      currentUser: firebase.auth().currentUser,
+      viewers: 0
     }
   },
   computed: {
@@ -169,7 +170,10 @@ export default {
             }))
             .sort((a, b) => this.importance(b) - this.importance(a))
             .slice(0, 2)
-        })
+        }),
+      this.roomRef.collection('viewers').onSnapshot(snapshot => {
+        this.viewers = snapshot.size
+      })
     ]
   },
   updated() {
@@ -191,12 +195,14 @@ export default {
         msg: this.text,
         likes: 0,
         fans: [],
-        pinned: false
+        pinned: false,
+        deleted: false
       })
       this.text = ''
     },
     like(chat) {
       // if (chat.fans.includes(this.currentUser.uid) === true) return
+      if (chat.deleted) return
       this.roomRef
         .collection('chatList')
         .doc(chat.id)
@@ -225,6 +231,7 @@ export default {
         })
       }
     },
+
     showdummy() {
       this.stopdummy = setInterval(() => {
         if (this.dummyChats.length === 0) {
@@ -239,7 +246,8 @@ export default {
           timeCreated: firebase.firestore.Timestamp.now(),
           msg: chat.msg,
           likes: 0,
-          pinned: false
+          pinned: false,
+          deleted: false
         })
       }, 140)
     },
