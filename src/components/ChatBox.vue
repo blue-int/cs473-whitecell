@@ -159,7 +159,8 @@ export default {
       viewers: 0,
       decay: null,
       stickBottom: true,
-      hasScroll: false
+      hasScroll: false,
+      jumpBottom: null
     }
   },
   computed: {
@@ -268,6 +269,13 @@ export default {
           fans: firebase.firestore.FieldValue.arrayUnion(this.currentUser.uid),
           pinned: this.pinned(chat)
         })
+      clearTimeout(this.jumpBottom)
+      this.jumpBottom = setTimeout(() => {
+        this.stickBottom = true
+
+        const chatBox = this.$el.querySelector('.chat-box')
+        chatBox.scrollTop = chatBox.scrollHeight
+      }, 3000)
     },
     pinned(chat) {
       if (chat.likes < 5) return false
