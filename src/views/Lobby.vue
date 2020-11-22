@@ -27,6 +27,9 @@
       elevation="12"
       @click="$router.push(`/lobby/${room.id}`)"
     >
+      <v-btn dark x-small elevation="3" class="live-btn" color="like">
+        Live
+      </v-btn>
       <v-img
         :aspect-ratio="16 / 9"
         src="https://img.youtube.com/vi/bTqVqk7FSmY/maxresdefault.jpg"
@@ -130,5 +133,12 @@ export default {
 }
 .goBack-btn {
   margin-left: -12px;
+}
+.live-btn {
+  pointer-events: none;
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 1;
 }
 </style>
