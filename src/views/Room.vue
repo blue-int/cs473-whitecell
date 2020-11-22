@@ -183,13 +183,14 @@ export default {
     // })
     // })
 
+    roomRef.update({
+      viewers: firebase.firestore.FieldValue.increment(1)
+    })
     roomRef
       .collection('viewers')
       .doc(userInfo.uid)
       .set(userInfo)
-    roomRef.update({
-      viewers: firebase.firestore.FieldValue.increment(1)
-    })
+
     next()
   },
   beforeRouteLeave: (to, from, next) => {
