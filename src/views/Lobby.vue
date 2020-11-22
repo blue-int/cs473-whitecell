@@ -27,9 +27,6 @@
       elevation="12"
       @click="$router.push(`/lobby/${room.id}`)"
     >
-      <v-btn dark x-small elevation="3" class="live-btn" color="like">
-        Live
-      </v-btn>
       <v-img
         :aspect-ratio="16 / 9"
         src="https://img.youtube.com/vi/bTqVqk7FSmY/maxresdefault.jpg"
@@ -39,6 +36,9 @@
       <v-card-subtitle class="px-3 pb-3">
         {{ room.hostName }} · {{ room.viewers }} viewers
       </v-card-subtitle>
+      <v-btn dark x-small elevation="3" class="live-btn" color="like">
+        Live
+      </v-btn>
     </v-card>
   </v-container>
 </template>
