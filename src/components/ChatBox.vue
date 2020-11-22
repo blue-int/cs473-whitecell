@@ -259,7 +259,11 @@ export default {
     },
     like(chat) {
       // if (chat.fans.includes(this.currentUser.uid) === true) return
-      if (chat.deleted) return
+      if (chat.deleted) {
+        console.log('Deleted message.')
+        return
+      }
+
       this.roomRef
         .collection('chatList')
         .doc(chat.id)
@@ -306,8 +310,9 @@ export default {
       const chatRef = this.roomRef.collection('chatList').doc(targetChat.id)
       chatRef.update({
         msg: 'This message has deleted',
-        likes: 0,
-        pinned: false
+        likes: -1,
+        pinned: false,
+        deleted: true
       })
 
       // Ban chatter & fans
