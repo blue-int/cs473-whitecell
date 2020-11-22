@@ -23,15 +23,17 @@
         clear
       </v-icon>
     </v-btn>
-    <!-- <v-row
-      v-for="name in viewers"
-      :key="name.id"
-      class="px-2"
-      no-gutters
-      @click="banUser(name.uid)"
-    >
-      <v-col class="py-1"> Ban| {{ name.displayName }} </v-col>
-    </v-row> -->
+    <v-card class="ban-card" elevation="12">
+      <v-row
+        v-for="name in viewers"
+        :key="name.id"
+        class="px-2"
+        no-gutters
+        @click="banUser(name.uid)"
+      >
+        <v-col class="py-1"> Ban| {{ name.displayName }} </v-col>
+      </v-row>
+    </v-card>
     <ChatBox />
     <!-- <v-row>
       <v-col>
@@ -234,5 +236,11 @@ export default {
 
 .goBack-btn {
   margin-left: -12px;
+}
+.ban-card {
+  position: fixed;
+  top: 50px;
+  margin: 12px;
+  width: calc(100% - 24px);
 }
 </style>
