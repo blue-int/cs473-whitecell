@@ -297,30 +297,21 @@ export default {
       })
 
       // Ban chatter & fans
+      db.runTransaction(async transaction => {
+        const room = await transaction.get(this.roomRef)
 
-      db.runTransaction(transaction => {
-        return transaction.get(this.roomRef).then(room => {
-          if (!room.exists) {
-            alert('The room does not exists')
-            this.$router.push('/lobby')
-          }
-          let mergedBanList = room.data().banListUid.concat(targetChat.fans)
-          transaction.update(this.roomRef, { banListUid: mergedBanList })
-        })
-      }).catch(() => {})
-
-      this.roomRef.get().then(room => {
-        if (!room.data().banListUid.includes(targetChat.uid))
-          this.roomRef
-            .update({
-              banListUid: firebase.firestore.FieldValue.arrayUnion(
-                targetChat.uid
-              )
-            })
-            .catch(e => {
-              console.log('Error getting chat:', e)
-            })
-      })
+        if (!room.exists) {
+          return
+        }
+        const mergedBanList = [
+          ...new Set([
+            ...room.data().banListUid,
+            ...targetChat.fans,
+            targetChat.uid
+          ])
+        ]
+        return transaction.update(this.roomRef, { banListUid: mergedBanList })
+      }).catch(e => console.log(e))
     }
   }
 }
