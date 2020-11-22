@@ -103,14 +103,14 @@
 <script>
 import { db } from '@/components/firebaseInit'
 import firebase from 'firebase/app'
-import { dummychats } from '@/components/dummy'
+import { dummyChats } from '@/components/dummy'
 export default {
   name: 'ChatBox',
   data() {
     return {
       pinList: [],
       chatList: [],
-      dummychats: [],
+      dummyChats: [],
       unsubscribe: [],
       text: '',
       stopdummy: null,
@@ -123,7 +123,7 @@ export default {
     }
   },
   created() {
-    this.dummychats = dummychats.slice()
+    this.dummyChats = dummyChats.slice()
     this.unsubscribe = [
       this.roomRef
         .collection('chatList')
@@ -196,13 +196,21 @@ export default {
         return true
       else return false
     },
+    addDummy() {
+      for (const [index, dummy] of this.dummyChats.entries()) {
+        db.collection('dummies').add({
+          index,
+          ...dummy
+        })
+      }
+    },
     showdummy() {
       this.stopdummy = setInterval(() => {
-        if (this.dummychats.length === 0) {
+        if (this.dummyChats.length === 0) {
           clearInterval(this.stopdummy)
           return
         }
-        const chat = this.dummychats.shift()
+        const chat = this.dummyChats.shift()
         this.chatList.push({
           uid: null,
           displayName: chat.name,
