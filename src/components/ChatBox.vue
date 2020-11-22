@@ -58,7 +58,6 @@
       </v-list>
       <v-divider></v-divider>
     </v-card>
-
     <v-virtual-scroll :items="chatList" item-height="44" class="chat-box">
       <template v-slot:default="{ index, item }">
         <v-list-item :key="item.id" class="chat px-3" @click="like(item)">
@@ -84,8 +83,9 @@
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-
-        <v-divider v-if="index !== chatList.length - 1"></v-divider>
+        <v-divider
+          v-show="index !== chatList.length - 1 || hasScroll === false"
+        ></v-divider>
       </template>
     </v-virtual-scroll>
 
@@ -137,7 +137,8 @@ export default {
       currentUser: firebase.auth().currentUser,
       viewers: 0,
       decay: null,
-      stickBottom: true
+      stickBottom: true,
+      hasScroll: false
     }
   },
   computed: {
@@ -203,6 +204,15 @@ export default {
   updated() {
     const chatBox = this.$el.querySelector('.chat-box')
     if (this.stickBottom === true) chatBox.scrollTop = chatBox.scrollHeight
+    this.$nextTick(() => {
+      const scrollHeight = chatBox.scrollHeight
+      const clientHeight = chatBox.clientHeight
+      if (scrollHeight > clientHeight) {
+        this.hasScroll = true
+      } else {
+        this.hasScroll = false
+      }
+    })
   },
   destroyed() {
     clearInterval(this.stopDummy)
@@ -240,12 +250,16 @@ export default {
     },
     pinned(chat) {
       if (chat.likes < 5) return false
-      if (chat.pinned === true) return true
-      if (this.pinList.length < 3) return true
-      if (
+      else if (chat.pinned === true) return true
+      else if (
+        this.importance(chat) <
+        firebase.firestore.Timestamp.now().seconds - 30
+      )
+        return false
+      else if (this.pinList.length < 3) return true
+      else if (
         this.importance(this.pinList[this.pinList.length - 1]) <
-          this.importance(chat) &&
-        this.importance(chat) > firebase.firestore.Timestamp.now().seconds - 30
+        this.importance(chat)
       )
         return true
       else return false
