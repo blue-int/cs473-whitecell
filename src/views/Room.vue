@@ -184,32 +184,28 @@ export default {
     //   }
     // })
     // })
-
-    roomRef.update({
+    const batch = db.batch()
+    batch.update(roomRef, {
       viewers: firebase.firestore.FieldValue.increment(1)
     })
-    roomRef
-      .collection('viewers')
-      .doc(userInfo.uid)
-      .set(userInfo)
+    batch.set(roomRef.collection('viewers').doc(userInfo.uid), userInfo)
+    batch.commit()
 
     next()
   },
   beforeRouteLeave: async (to, from, next) => {
     const roomRef = db.collection('lobby').doc(from.params.id)
 
-    roomRef
-      .update({
-        viewers: firebase.firestore.FieldValue.increment(-1)
-      })
-      .catch(() => {
-        // console.log('Stop Stream')
-      })
-    roomRef
-      .collection('viewers')
-      .doc(firebase.auth().currentUser.uid)
-      .delete()
-
+    const batch = db.batch()
+    batch.update(roomRef, {
+      viewers: firebase.firestore.FieldValue.increment(-1)
+    })
+    batch.delete(
+      roomRef.collection('viewers').doc(firebase.auth().currentUser.uid)
+    )
+    batch.commit().catch(() => {
+      // console.log('Stop Stream')
+    })
     next()
   }
 }
