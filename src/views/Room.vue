@@ -84,22 +84,20 @@ export default {
   },
   async created() {
     const banSnapshot = this.roomRef.onSnapshot(async doc => {
-      if (doc.data().banListUid.includes(firebase.auth().currentUser.uid)) {
+      if (!doc.exists) {
+        alert('The room does not exists')
+        this.$router.push('/lobby')
+      } else if (
+        doc.data().banListUid.includes(firebase.auth().currentUser.uid)
+      ) {
         alert('You are banned!!')
         this.$router.push('/lobby')
       }
-    })
-    this.unsubList.push(banSnapshot)
-
-    const doc = await this.roomRef.get()
-    if (!doc.exists) {
-      alert('The room does not exists')
-      this.$router.push('/lobby')
-    } else {
       this.title = doc.data().title
       this.hostName = doc.data().hostName
       this.hostUid = doc.data().hostUid
-    }
+    })
+    this.unsubList.push(banSnapshot)
   },
   mounted() {
     const viewerSnapshot = this.roomRef
@@ -146,15 +144,6 @@ export default {
     }
     const roomRef = db.collection('lobby').doc(to.params.id)
 
-    // let subscribe = roomRef.onSnapshot(doc => {
-    //   if (doc.data().banListUid.includes(firebase.auth().currentUser.uid)) {
-    //     alert('You are banned!!')
-    //     subscribe()
-    //     next('/lobby')
-    //     return
-    //   }
-    // })
-    // })
     const batch = db.batch()
     batch.update(roomRef, {
       viewers: firebase.firestore.FieldValue.increment(1)
