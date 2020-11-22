@@ -52,6 +52,7 @@
               <v-icon color="like" size="15" class="icon"
                 >favorite_border</v-icon
               >
+              <v-btn @click="banChat(pin)">Ban Chat</v-btn>
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -137,7 +138,8 @@ export default {
       currentUser: firebase.auth().currentUser,
       viewers: 0,
       decay: null,
-      stickBottom: true
+      stickBottom: true,
+      hostUid: null
     }
   },
   computed: {
@@ -145,7 +147,15 @@ export default {
       return db.collection('lobby').doc(this.$route.params.id)
     }
   },
-  created() {
+  async created() {
+    const doc = await this.roomRef.get()
+    if (!doc.exists) {
+      alert('The room does not exists')
+      this.$router.push('/lobby')
+    } else {
+      this.hostUid = doc.data().hostUid
+    }
+
     this.unsubList = [
       this.roomRef
         .collection('chatList')
@@ -262,6 +272,44 @@ export default {
     },
     importance(chat) {
       return 6 * chat.likes + chat.timeCreated.seconds
+    },
+    banChat(targetChat) {
+      if (firebase.auth().currentUser.uid !== this.hostUid) {
+        alert('You are not host!')
+        return
+      }
+      const chatRef = this.roomRef.collection('chatList').doc(targetChat.id)
+      chatRef.update({
+        msg: 'This message has deleted',
+        likes: 0,
+        pinned: false
+      })
+
+      // Ban chatter & fans
+
+      db.runTransaction(transaction => {
+        return transaction.get(this.roomRef).then(room => {
+          if (!room.exists) {
+            alert('The room does not exists')
+            this.$router.push('/lobby')
+          }
+          let mergedBanList = room.data().banListUid.concat(targetChat.fans)
+          transaction.update(this.roomRef, { banListUid: mergedBanList })
+        })
+      }).catch(() => {})
+
+      this.roomRef.get().then(room => {
+        if (!room.data().banListUid.includes(targetChat.uid))
+          this.roomRef
+            .update({
+              banListUid: firebase.firestore.FieldValue.arrayUnion(
+                targetChat.uid
+              )
+            })
+            .catch(e => {
+              console.log('Error getting chat:', e)
+            })
+      })
     }
   }
 }
