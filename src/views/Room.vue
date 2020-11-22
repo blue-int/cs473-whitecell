@@ -172,7 +172,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .room-container {
-  //hard coded.. fix soon
   height: 100vh;
 
   display: grid;
