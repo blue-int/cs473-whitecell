@@ -193,18 +193,22 @@ export default {
 
     next()
   },
-  beforeRouteLeave: (to, from, next) => {
+  beforeRouteLeave: async (to, from, next) => {
     const roomRef = db.collection('lobby').doc(from.params.id)
-
-    roomRef.update({
-      viewers: firebase.firestore.FieldValue.increment(-1)
-    })
-    roomRef
-      .collection('viewers')
-      .doc(firebase.auth().currentUser.uid)
-      .delete()
-
-    next()
+    try {
+      await Promise.all([
+        roomRef.update({
+          viewers: firebase.firestore.FieldValue.increment(-1)
+        }),
+        roomRef
+          .collection('viewers')
+          .doc(firebase.auth().currentUser.uid)
+          .delete(),
+        next()
+      ])
+    } catch (e) {
+      console.log('Room already deleted: ', e)
+    }
   }
 }
 </script>

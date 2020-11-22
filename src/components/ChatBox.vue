@@ -59,7 +59,7 @@
       <v-divider></v-divider>
     </v-card>
 
-    <v-virtual-scroll :items="chatList" item-height="44" class="chat-box">
+    <v-virtual-scroll :items="totChatList" item-height="44" class="chat-box">
       <template v-slot:default="{ item }">
         <v-list-item :key="item.id" class="chat px-3" @click="like(item)">
           <v-list-item-avatar
@@ -112,7 +112,7 @@
       dark
       x-small
       color="#3e7495"
-      @click="showdummy()"
+      @click="showDummy()"
     >
       <v-icon dark>
         adb
@@ -132,6 +132,7 @@ export default {
       pinList: [],
       chatList: [],
       dummyChats: [],
+      dummies: [],
       unsubscribe: [],
       text: '',
       stopdummy: null,
@@ -143,6 +144,13 @@ export default {
   computed: {
     roomRef() {
       return db.collection('lobby').doc(this.$route.params.id)
+    },
+    totChatList() {
+      return this.chatList.concat(this.dummies).sort((a, b) => {
+        if (a.timeCreated === null) return 1
+        if (b.timeCreated === null) return -1
+        return a.timeCreated.toMillis() - b.timeCreated.toMillis()
+      })
     }
   },
   created() {
@@ -220,14 +228,15 @@ export default {
     like(chat) {
       // if (chat.fans.includes(this.currentUser.uid) === true) return
       if (chat.deleted) return
-      this.roomRef
-        .collection('chatList')
-        .doc(chat.id)
-        .update({
-          likes: firebase.firestore.FieldValue.increment(1),
-          fans: firebase.firestore.FieldValue.arrayUnion(this.currentUser.uid),
-          pinned: this.pinned(chat)
-        })
+      const chatRef =
+        chat.uid === 'dummy'
+          ? db.collection('dummies').doc(chat.id)
+          : this.roomRef.collection('chatList').doc(chat.id)
+      chatRef.update({
+        likes: firebase.firestore.FieldValue.increment(1),
+        fans: firebase.firestore.FieldValue.arrayUnion(this.currentUser.uid),
+        pinned: this.pinned(chat)
+      })
     },
     pinned(chat) {
       if (chat.likes < 5) return false
@@ -249,24 +258,28 @@ export default {
         })
       }
     },
-    showdummy() {
-      this.stopdummy = setInterval(() => {
-        if (this.dummyChats.length === 0) {
-          clearInterval(this.stopdummy)
-          return
-        }
-        const chat = this.dummyChats.shift()
-        this.chatList.push({
-          uid: null,
-          displayName: chat.name,
-          photoURL: null,
-          timeCreated: firebase.firestore.Timestamp.now(),
-          msg: chat.msg,
-          likes: 0,
-          pinned: false,
-          deleted: false
-        })
-      }, 140)
+    showDummy() {
+      this.unsubscribe.push(
+        db
+          .collection('dummies')
+          .orderBy('index')
+          .onSnapshot(snapshot => {
+            const dummies = snapshot.docs.map(doc => {
+              return {
+                id: doc.id,
+                ...doc.data()
+              }
+            })
+            this.stopdummy = setInterval(() => {
+              const dummy = dummies.shift()
+              if (dummy === undefined) return clearInterval(this.stopdummy)
+              this.dummies.push({
+                timeCreated: firebase.firestore.Timestamp.now(),
+                ...dummy
+              })
+            }, 140)
+          })
+      )
     },
     importance(chat) {
       return 6 * chat.likes + chat.timeCreated.seconds
