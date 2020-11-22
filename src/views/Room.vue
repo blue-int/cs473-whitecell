@@ -81,6 +81,14 @@ export default {
     }
   },
   async created() {
+    const banSnapshot = this.roomRef.onSnapshot(async doc => {
+      if (doc.data().banListUid.includes(firebase.auth().currentUser.uid)) {
+        alert('You are banned!!')
+        this.$router.push('/lobby')
+      }
+    })
+    this.unsubList.push(banSnapshot)
+
     const doc = await this.roomRef.get()
     if (!doc.exists) {
       alert('The room does not exists')
@@ -89,42 +97,34 @@ export default {
       this.title = doc.data().title
       this.hostName = doc.data().hostName
       this.hostUid = doc.data().hostUid
-      this.unsubList = [
-        this.roomRef.collection('viewers').onSnapshot(snapshot => {
-          this.viewers = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-          }))
-        }),
-        this.roomRef.onSnapshot(async doc => {
-          if (doc.data().banListUid.includes(firebase.auth().currentUser.uid)) {
-            setTimeout(() => {
-              if (!alert('You are banned!!')) {
-                this.$router.push('/lobby')
-              }
-            }, 0)
-          }
-        })
-      ]
     }
+  },
+  mounted() {
+    const viewerSnapshot = this.roomRef
+      .collection('viewers')
+      .onSnapshot(snapshot => {
+        this.viewers = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }))
+      })
+    this.unsubList.push(viewerSnapshot)
   },
   destroyed() {
     this.unsubList.forEach(unsub => unsub())
   },
   methods: {
-    banUser(banUID) {
-      /*
+    banUser(banUid) {
       if (firebase.auth().currentUser.uid != this.hostUid) {
         alert('You are not host!')
         return
       }
-      const banUID = this.viewers.find(user => {
-        return user.displayName === userName
-      }) // find uid from viewers via userName
-      */
+      // const banUID = this.viewers.find(user => {
+      //   return user.displayName === userName
+      // }) // find uid from viewers via userName
 
       this.roomRef.update({
-        banListUid: firebase.firestore.FieldValue.arrayUnion(banUID)
+        banListUid: firebase.firestore.FieldValue.arrayUnion(banUid)
       })
     },
 
@@ -195,20 +195,20 @@ export default {
   },
   beforeRouteLeave: async (to, from, next) => {
     const roomRef = db.collection('lobby').doc(from.params.id)
-    try {
-      await Promise.all([
-        roomRef.update({
-          viewers: firebase.firestore.FieldValue.increment(-1)
-        }),
-        roomRef
-          .collection('viewers')
-          .doc(firebase.auth().currentUser.uid)
-          .delete(),
-        next()
-      ])
-    } catch (e) {
-      console.log('Room already deleted: ', e)
-    }
+
+    roomRef
+      .update({
+        viewers: firebase.firestore.FieldValue.increment(-1)
+      })
+      .catch(() => {
+        // console.log('Stop Stream')
+      })
+    roomRef
+      .collection('viewers')
+      .doc(firebase.auth().currentUser.uid)
+      .delete()
+
+    next()
   }
 }
 </script>
