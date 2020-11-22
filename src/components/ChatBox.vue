@@ -49,7 +49,14 @@
             </v-list-item-title>
             <v-list-item-title class="like--text">
               {{ pin.likes }}
-              <v-icon color="like" size="15" class="icon"
+              <v-icon
+                v-if="pin.fans.includes(currentUser.uid)"
+                color="like"
+                size="15"
+                class="icon"
+                >favorite</v-icon
+              >
+              <v-icon v-else color="like" size="15" class="icon"
                 >favorite_border</v-icon
               >
             </v-list-item-title>
@@ -78,7 +85,14 @@
             </v-list-item-title>
             <v-list-item-title class="like--text">
               {{ item.likes }}
-              <v-icon color="like" size="15" class="icon"
+              <v-icon
+                v-if="item.fans.includes(currentUser.uid)"
+                color="like"
+                size="15"
+                class="icon"
+                >favorite</v-icon
+              >
+              <v-icon v-else color="like" size="15" class="icon"
                 >favorite_border</v-icon
               >
             </v-list-item-title>
