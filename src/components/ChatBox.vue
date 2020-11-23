@@ -446,15 +446,14 @@ export default {
         fans: firebase.firestore.FieldValue.arrayRemove(this.hostUid)
       })
       // Ban chatter & fans
-      let members = 0
+      let banCount = 0
       db.runTransaction(async transaction => {
         const room = await transaction.get(this.roomRef)
 
         if (!room.exists) {
           return
         }
-        const hostIndex = targetChat.fans.indexOf(this.hostUid)
-        targetChat.fans.splice(hostIndex, 1)
+
         const mergedBanList = [
           ...new Set([
             ...room.data().banListUid,
@@ -462,13 +461,19 @@ export default {
             targetChat.uid
           ])
         ]
-        console.log(mergedBanList)
-        members = mergedBanList.length
+        const hostIndex = mergedBanList.indexOf(this.hostUid)
+        if (hostIndex !== -1) {
+          mergedBanList.splice(hostIndex, 1)
+        }
+        banCount = mergedBanList.length - room.data().banListUid.length
         return transaction.update(this.roomRef, { banListUid: mergedBanList })
       })
         .then(() => {
-          console.log('??')
-          alert('You banned ' + members + ' viewers!!')
+          if (banCount !== 0) {
+            alert('You banned ' + banCount + ' viewers!!')
+          } else {
+            alert('Nobody has banned: Did you try to ban yourself?')
+          }
         })
         .catch(e => console.log(e))
     }
