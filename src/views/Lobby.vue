@@ -68,8 +68,12 @@ export default {
   data() {
     return {
       roomList: [],
-      unsubscribe: null,
-      currentUser: firebase.auth().currentUser
+      unsubscribe: null
+    }
+  },
+  computed: {
+    currentUser() {
+      return firebase.auth().currentUser
     }
   },
   created() {

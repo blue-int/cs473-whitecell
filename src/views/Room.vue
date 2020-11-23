@@ -11,6 +11,7 @@
       </div>
     </vue-plyr>
     <v-btn
+      v-if="hostUid === currentUser.uid"
       class="ma-3 float-btn"
       elevation="12"
       fab
@@ -78,6 +79,9 @@ export default {
     }
   },
   computed: {
+    currentUser() {
+      return firebase.auth().currentUser
+    },
     roomRef() {
       return db.collection('lobby').doc(this.$route.params.id)
     }
@@ -114,7 +118,7 @@ export default {
     this.unsubList.forEach(unsub => unsub())
   },
   methods: {
-    async stopStream() {
+    stopStream() {
       this.roomRef.delete()
       this.$router.push('/lobby')
     }

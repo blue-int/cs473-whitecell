@@ -203,7 +203,6 @@ export default {
       unsubList: [],
       text: '',
       stopDummy: null,
-      currentUser: firebase.auth().currentUser,
       viewers: 0,
       decay: null,
       numLike: 0,
@@ -230,6 +229,9 @@ export default {
     }
   },
   computed: {
+    currentUser() {
+      return firebase.auth().currentUser
+    },
     roomRef() {
       return db.collection('lobby').doc(this.$route.params.id)
     }
