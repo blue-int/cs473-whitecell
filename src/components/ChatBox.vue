@@ -204,7 +204,7 @@ export default {
       text: '',
       stopDummy: null,
       viewers: 0,
-      decay: null,
+      stopDecay: null,
       numLike: 0,
       numPinned: 0,
       stickBottom: true,
@@ -263,6 +263,8 @@ export default {
             }))
             .sort((a, b) => b.estEndTime - a.estEndTime)
             .slice(0, 2)
+          clearInterval(this.stopDecay)
+          this.stopDecay = this.decay()
         }),
       this.roomRef.collection('viewers').onSnapshot(snapshot => {
         this.viewers = snapshot.size
@@ -281,25 +283,7 @@ export default {
     ]
   },
   mounted() {
-    this.decay = setInterval(() => {
-      if (this.pinList.length === 0) return
-      const currentTime = firebase.firestore.Timestamp.now().toMillis() / 1000
-      this.pinList.forEach(pin => {
-        pin.estEndTime = this.estEndTime(pin)
-        pin.currentTime = currentTime
-      })
-      if (
-        this.estEndTime(this.pinList[this.pinList.length - 1]) < currentTime
-      ) {
-        this.roomRef
-          .collection('chatList')
-          .doc(this.pinList[this.pinList.length - 1].id)
-          .update({
-            pinned: false,
-            havebeenPinned: true
-          })
-      }
-    }, 1000)
+    this.stopDecay = this.decay()
     const chatBox = this.$el.querySelector('.chat-box')
     chatBox.onscroll = () => {
       if (
@@ -329,7 +313,7 @@ export default {
   },
   destroyed() {
     clearInterval(this.stopDummy)
-    clearInterval(this.decay)
+    clearInterval(this.stopDecay)
     this.unsubList.forEach(unsub => unsub())
   },
   methods: {
@@ -407,6 +391,27 @@ export default {
       } else {
         return 6 * chat.likes + chat.timeCreated.toMillis() / 1000 - 25
       }
+    },
+    decay() {
+      return setInterval(() => {
+        if (this.pinList.length === 0) return
+        const currentTime = firebase.firestore.Timestamp.now().toMillis() / 1000
+        this.pinList.forEach(pin => {
+          pin.estEndTime = this.estEndTime(pin)
+          pin.currentTime = currentTime
+        })
+        if (
+          this.estEndTime(this.pinList[this.pinList.length - 1]) < currentTime
+        ) {
+          this.roomRef
+            .collection('chatList')
+            .doc(this.pinList[this.pinList.length - 1].id)
+            .update({
+              pinned: false,
+              havebeenPinned: true
+            })
+        }
+      }, 1000)
     },
     showDummy() {
       const tempDummies = dummyChats.slice()
