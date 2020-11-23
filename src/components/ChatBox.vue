@@ -7,7 +7,7 @@
     >
       <div>
         <v-card-title class="px-0 py-2">
-          Live Chat {{ pinList[0] }}
+          Live Chat
         </v-card-title>
         <v-card-subtitle class="px-0 py-2">
           {{ viewers }} viewers
@@ -255,7 +255,7 @@ export default {
               currentTime: firebase.firestore.Timestamp.now().toMillis() / 1000,
               ...doc.data()
             }))
-            .sort((a, b) => this.estEndTime(b) - this.estEndTime(a))
+            .sort((a, b) => b.estEndTime - a.estEndTime)
             .slice(0, 2)
         }),
       this.roomRef.collection('viewers').onSnapshot(snapshot => {
@@ -278,12 +278,9 @@ export default {
     this.decay = setInterval(() => {
       if (this.pinList.length === 0) return
       const currentTime = firebase.firestore.Timestamp.now().toMillis() / 1000
-      this.pinList = this.pinList.map(pin => {
-        return {
-          ...pin,
-          estEndTime: this.estEndTime(pin),
-          currentTime
-        }
+      this.pinList.forEach(pin => {
+        pin.estEndTime = this.estEndTime(pin)
+        pin.currentTime = currentTime
       })
       if (
         this.estEndTime(this.pinList[this.pinList.length - 1]) < currentTime
@@ -296,7 +293,7 @@ export default {
             havebeenPinned: true
           })
       }
-    }, 10)
+    }, 1000)
     const chatBox = this.$el.querySelector('.chat-box')
     chatBox.onscroll = () => {
       if (
@@ -334,7 +331,6 @@ export default {
       return (window.innerWidth * (pin.estEndTime - pin.currentTime)) / 15
     },
     send(event) {
-      console.log(event)
       event.target.blur()
       if (this.text.length == 0) return
       this.roomRef.collection('chatList').add({
@@ -395,6 +391,7 @@ export default {
       }
     },
     estEndTime(chat) {
+      // return 6 * chat.likes + chat.timeCreated.toMillis() / 1000 - 25
       const currentTime = firebase.firestore.Timestamp.now().toMillis() / 1000
       if (
         6 * chat.likes + chat.timeCreated.toMillis() / 1000 - 25 >
@@ -487,6 +484,7 @@ export default {
 .guage {
   position: absolute;
   margin-left: -12px;
+  transition: linear all 1s;
 }
 .pin-chat-content {
   display: grid;
@@ -495,7 +493,16 @@ export default {
 .menu-btn {
   margin-right: -16px;
 }
+.flip-list-enter-active,
+.flip-list-leave-active {
+  transition: all 1s;
+}
+.flip-list-enter,
+.flip-list-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
 .flip-list-move {
-  transition: all 0.1s;
+  transition: transform 0.3s;
 }
 </style>
