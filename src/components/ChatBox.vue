@@ -161,8 +161,8 @@
           outlined
           dense
           hide-details
-          @keyup.enter="send()"
-          @click:append="send()"
+          @keyup.enter="send($event)"
+          @click:append="send($event)"
         />
       </v-toolbar>
     </v-card>
@@ -331,7 +331,9 @@ export default {
     renderGuage(pin) {
       return (window.innerWidth * (pin.estEndTime - pin.currentTime)) / 15
     },
-    send() {
+    send(event) {
+      console.log(event)
+      event.target.blur()
       if (this.text.length == 0) return
       this.roomRef.collection('chatList').add({
         uid: this.currentUser.uid,
