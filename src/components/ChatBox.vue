@@ -242,10 +242,13 @@ export default {
             havebeenPinned: true
           })
       }
-    }, 100)
+    }, 10)
     const chatBox = this.$el.querySelector('.chat-box')
     chatBox.onscroll = () => {
-      if (chatBox.scrollHeight !== chatBox.scrollTop + chatBox.clientHeight) {
+      if (
+        chatBox.scrollHeight !==
+        parseInt(chatBox.scrollTop + chatBox.clientHeight, 10)
+      ) {
         this.stickBottom = false
       } else {
         this.stickBottom = true
@@ -254,7 +257,9 @@ export default {
   },
   updated() {
     const chatBox = this.$el.querySelector('.chat-box')
-    if (this.stickBottom === true) chatBox.scrollTop = chatBox.scrollHeight
+    if (this.stickBottom === true) {
+      chatBox.scrollTop = chatBox.scrollHeight
+    }
     this.$nextTick(() => {
       const scrollHeight = chatBox.scrollHeight
       const clientHeight = chatBox.clientHeight
@@ -340,8 +345,9 @@ export default {
       return 6 * chat.likes + chat.timeCreated.toMillis() / 1000 - 25
     },
     showDummy() {
+      const tempDummies = dummyChats.slice()
       this.stopDummy = setInterval(() => {
-        const dummy = dummyChats.shift()
+        const dummy = tempDummies.shift()
         if (dummy === undefined) return clearInterval(this.stopDummy)
         this.roomRef.collection('chatList').add({
           timeCreated: firebase.firestore.FieldValue.serverTimestamp(),
