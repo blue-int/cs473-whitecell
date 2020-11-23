@@ -8,7 +8,7 @@
       elevation="0"
     >
       <v-spacer></v-spacer>
-      <v-toolbar-subtitle>
+      <div>
         <span v-if="currentUser !== null">
           <v-breadcrumbs class="pr-0" divider="/">
             <v-breadcrumbs-item>
@@ -27,7 +27,7 @@
           </v-breadcrumbs>
         </span>
         <span v-else>please login</span>
-      </v-toolbar-subtitle>
+      </div>
     </v-app-bar>
 
     <v-main>
