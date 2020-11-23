@@ -1,10 +1,27 @@
 <template>
   <v-container fluid class="lobby pa-0">
     <div class="parallax pa-0"></div>
-    <v-toolbar elevation="0" color="transparent">
-      <v-btn icon dark class="goBack-btn" @click="$router.push('/')">
-        <v-icon>arrow_back</v-icon>
-      </v-btn>
+    <v-toolbar dark elevation="0" color="transparent">
+      <v-spacer></v-spacer>
+      <v-toolbar-subtitle>
+        <span v-if="currentUser !== null">
+          <v-breadcrumbs class="pr-0" divider="/">
+            <v-breadcrumbs-item>
+              {{ currentUser.displayName }}
+            </v-breadcrumbs-item>
+            <v-breadcrumbs-item class="pr-0">
+              <v-btn
+                x-small
+                color="rgba(0,0,0,0.5)"
+                elevation="0"
+                @click="signOut()"
+                >Sign Out</v-btn
+              >
+            </v-breadcrumbs-item>
+          </v-breadcrumbs>
+        </span>
+        <span v-else>please login</span>
+      </v-toolbar-subtitle>
     </v-toolbar>
 
     <v-btn
@@ -51,7 +68,8 @@ export default {
   data() {
     return {
       roomList: [],
-      unsubscribe: null
+      unsubscribe: null,
+      currentUser: firebase.auth().currentUser
     }
   },
   created() {
@@ -98,6 +116,14 @@ export default {
         return `${date.getMonth() +
           1}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
       }
+    },
+    async signOut() {
+      try {
+        await firebase.auth().signOut()
+        this.$router.push('/login')
+      } catch (e) {
+        console.log(e)
+      }
     }
   }
 }
@@ -130,9 +156,6 @@ export default {
   bottom: 0;
   right: 0;
   z-index: 10;
-}
-.goBack-btn {
-  margin-left: -12px;
 }
 .live-btn {
   pointer-events: none;
