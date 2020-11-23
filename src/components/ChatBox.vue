@@ -242,7 +242,7 @@ export default {
             havebeenPinned: true
           })
       }
-    }, 100)
+    }, 50)
     const chatBox = this.$el.querySelector('.chat-box')
     chatBox.onscroll = () => {
       if (chatBox.scrollHeight !== chatBox.scrollTop + chatBox.clientHeight) {
@@ -272,10 +272,7 @@ export default {
   },
   methods: {
     renderGuage(pin) {
-      return (
-        (window.innerWidth * (pin.estEndTime - pin.currentTime)) /
-        (pin.estEndTime - pin.timeCreated.toMillis() / 1000)
-      )
+      return (window.innerWidth * (pin.estEndTime - pin.currentTime)) / 15
     },
     send() {
       if (this.text.length == 0) return
@@ -337,7 +334,15 @@ export default {
       }
     },
     estEndTime(chat) {
-      return 6 * chat.likes + chat.timeCreated.toMillis() / 1000 - 25
+      const currentTime = firebase.firestore.Timestamp.now().toMillis() / 1000
+      if (
+        6 * chat.likes + chat.timeCreated.toMillis() / 1000 - 25 >
+        currentTime + 15
+      ) {
+        return currentTime + 15
+      } else {
+        return 6 * chat.likes + chat.timeCreated.toMillis() / 1000 - 25
+      }
     },
     showDummy() {
       this.stopDummy = setInterval(() => {
