@@ -172,12 +172,6 @@
         adb
       </v-icon>
     </v-btn>
-    <v-overlay dark="false" :absolute="true" :value="banOverlay">
-      <v-card @click="banOverlay = false">
-        <v-card-title>ban writter</v-card-title>
-        <v-card-title>ban likers</v-card-title>
-      </v-card>
-    </v-overlay>
   </v-container>
 </template>
 
@@ -208,7 +202,6 @@ export default {
       stickBottom: true,
       hasScroll: false,
       jumpBottom: null,
-      banOverlay: false,
       banMenu: [
         { title: 'ban chat', click: this.banChat },
         { title: 'ban fans', click: this.banChat2 }
