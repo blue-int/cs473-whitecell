@@ -65,9 +65,28 @@
               <v-icon v-else color="like" size="15" class="icon"
                 >favorite_border</v-icon
               >
-              <v-btn @click="banChat(pin)">Ban Chat</v-btn>
             </v-list-item-title>
           </v-list-item-content>
+          <v-menu v-if="currentUser.uid === hostUid" offset-x="-1" bottom left>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn icon v-bind="attrs" class="menu-btn" v-on="on">
+                <v-icon size="18">more_vert</v-icon>
+              </v-btn>
+            </template>
+
+            <v-list class="pa-0">
+              <v-list-item
+                v-for="(banBtn, i) in banMenu"
+                :key="i"
+                class="px-2"
+                color="like"
+                @click="banBtn.click(pin)"
+              >
+                <v-list-item-title>ban </v-list-item-title>
+                <v-icon right>{{ banBtn.icon }}</v-icon>
+              </v-list-item>
+            </v-list>
+          </v-menu>
         </v-list-item>
       </v-list>
       <v-divider></v-divider>
@@ -80,7 +99,7 @@
             size="20"
             class="my-3 mr-3"
           ></v-list-item-avatar>
-          <v-list-item-content class="list-content">
+          <v-list-item-content class="list-content py-0">
             <v-list-item-title class="my-0 mr-1">
               <span class="font-weight-bold">
                 {{ item.displayName }}
@@ -103,6 +122,27 @@
               >
             </v-list-item-title>
           </v-list-item-content>
+          <v-menu v-if="currentUser.uid === hostUid" offset-x="-1" bottom left>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn icon v-bind="attrs" class="menu-btn" v-on="on">
+                <v-icon size="18">more_vert</v-icon>
+              </v-btn>
+            </template>
+
+            <v-list class="pa-0">
+              <v-list-item
+                v-for="(banBtn, i) in banMenu"
+                :key="i"
+                class="px-2"
+                color="like"
+                @click="banBtn.click(pin)"
+              >
+                <v-list-item-title>ban </v-list-item-title>
+                <v-icon right>{{ banBtn.icon }}</v-icon>
+                <v-divider></v-divider>
+              </v-list-item>
+            </v-list>
+          </v-menu>
         </v-list-item>
         <v-divider
           v-show="index !== chatList.length - 1 || hasScroll === false"
@@ -168,7 +208,19 @@ export default {
       numPinned: 0,
       stickBottom: true,
       hasScroll: false,
-      jumpBottom: null
+      jumpBottom: null,
+      banMenu: [
+        {
+          description: 'ban only user',
+          icon: 'account_circle',
+          click: this.banChat2
+        },
+        {
+          description: 'ban user and fans',
+          icon: 'supervised_user_circle',
+          click: this.banChat
+        }
+      ]
     }
   },
   computed: {
@@ -435,5 +487,8 @@ export default {
 .pin-chat-content {
   display: grid;
   grid-template-columns: min-content 1fr;
+}
+.menu-btn {
+  margin-right: -16px;
 }
 </style>
