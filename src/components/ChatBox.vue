@@ -135,7 +135,7 @@
                 :key="i"
                 class="px-2"
                 color="like"
-                @click="banBtn.click(pin)"
+                @click="banBtn.click(item)"
               >
                 <v-list-item-title>ban </v-list-item-title>
                 <v-icon right>{{ banBtn.icon }}</v-icon>
@@ -213,12 +213,16 @@ export default {
         {
           description: 'ban only user',
           icon: 'account_circle',
-          click: this.banChat2
+          click: chat => {
+            this.banUser(chat)
+          }
         },
         {
           description: 'ban user and fans',
           icon: 'supervised_user_circle',
-          click: this.banChat
+          click: chat => {
+            this.banChat(chat)
+          }
         }
       ]
     }
@@ -353,7 +357,7 @@ export default {
     like(chat) {
       // if (chat.fans.includes(this.currentUser.uid) === true) return
       if (chat.deleted) {
-        console.log('Deleted message.')
+        alert('You can not give a like on the deleted message.')
         return
       }
 
@@ -414,6 +418,20 @@ export default {
         })
       }, 300)
     },
+    banUser(targetChat) {
+      if (firebase.auth().currentUser.uid !== this.hostUid) {
+        alert('You are not host!')
+        return
+      } else if (targetChat.uid === this.hostUid) {
+        alert('You cannot ban yourself!')
+        return
+      }
+
+      this.roomRef.update({
+        banListUid: firebase.firestore.FieldValue.arrayUnion(targetChat.uid)
+      })
+    },
+
     banChat(targetChat) {
       if (firebase.auth().currentUser.uid !== this.hostUid) {
         alert('You are not host!')
@@ -422,18 +440,20 @@ export default {
       const chatRef = this.roomRef.collection('chatList').doc(targetChat.id)
       chatRef.update({
         msg: 'This message has deleted',
-        likes: -1,
+        likes: 0,
         pinned: false,
-        deleted: true
+        deleted: true,
+        fans: firebase.firestore.FieldValue.arrayRemove(this.hostUid)
       })
-
       // Ban chatter & fans
+      let banCount = 0
       db.runTransaction(async transaction => {
         const room = await transaction.get(this.roomRef)
 
         if (!room.exists) {
           return
         }
+
         const mergedBanList = [
           ...new Set([
             ...room.data().banListUid,
@@ -441,8 +461,21 @@ export default {
             targetChat.uid
           ])
         ]
+        const hostIndex = mergedBanList.indexOf(this.hostUid)
+        if (hostIndex !== -1) {
+          mergedBanList.splice(hostIndex, 1)
+        }
+        banCount = mergedBanList.length - room.data().banListUid.length
         return transaction.update(this.roomRef, { banListUid: mergedBanList })
-      }).catch(e => console.log(e))
+      })
+        .then(() => {
+          if (banCount !== 0) {
+            alert('You banned ' + banCount + ' viewers!!')
+          } else {
+            alert('Nobody has banned: Did you try to ban yourself?')
+          }
+        })
+        .catch(e => console.log(e))
     }
   }
 }

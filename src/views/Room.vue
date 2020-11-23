@@ -114,20 +114,6 @@ export default {
     this.unsubList.forEach(unsub => unsub())
   },
   methods: {
-    banUser(banUid) {
-      if (firebase.auth().currentUser.uid !== this.hostUid) {
-        alert('You are not host!')
-        return
-      } else if (banUid === this.hostUid) {
-        alert('You cannot ban yourself!')
-        return
-      }
-
-      this.roomRef.update({
-        banListUid: firebase.firestore.FieldValue.arrayUnion(banUid)
-      })
-    },
-
     async stopStream() {
       this.roomRef.delete()
       this.$router.push('/lobby')
