@@ -27,67 +27,69 @@
     <v-card class="rounded-0 card" elevation="0" color="rgb(220,220,220)">
       <v-divider v-if="pinList.length !== 0"></v-divider>
       <v-list class="py-0 pin-box" color="rgb(245,245,245)">
-        <v-list-item
-          v-for="pin in pinList"
-          :key="pin.id"
-          class="pin-chat px-3"
-          @click="like(pin)"
-        >
-          <v-sheet
-            class="guage"
-            height="44"
-            :width="renderGuage(pin)"
-            color="rgba(234,30,99,0.2)"
-          ></v-sheet>
-          <v-list-item-avatar
-            color="primary"
-            size="20"
-            class="my-3 mr-3"
-          ></v-list-item-avatar>
-          <v-list-item-content class="list-content py-0">
-            <v-list-item-title class="my-0 mr-1">
-              <span class="font-weight-bold">
-                {{ pin.displayName }}
-              </span>
-              <span class="font-weight-light">
-                {{ pin.msg }}
-              </span>
-            </v-list-item-title>
-            <v-list-item-title class="like--text">
-              {{ pin.likes }}
-              <v-icon
-                v-if="pin.fans.includes(currentUser.uid)"
-                color="like"
-                size="15"
-                class="icon"
-                >favorite</v-icon
-              >
-              <v-icon v-else color="like" size="15" class="icon"
-                >favorite_border</v-icon
-              >
-            </v-list-item-title>
-          </v-list-item-content>
-          <v-menu v-if="currentUser.uid === hostUid" offset-x bottom left>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn icon v-bind="attrs" class="menu-btn" v-on="on">
-                <v-icon size="18">more_vert</v-icon>
-              </v-btn>
-            </template>
+        <transition-group name="flip-list" tag="div">
+          <v-list-item
+            v-for="pin in pinList"
+            :key="pin.id"
+            class="pin-chat px-3"
+            @click="like(pin)"
+          >
+            <v-sheet
+              class="guage"
+              height="44"
+              :width="renderGuage(pin)"
+              color="rgba(234,30,99,0.2)"
+            ></v-sheet>
+            <v-list-item-avatar
+              color="primary"
+              size="20"
+              class="my-3 mr-3"
+            ></v-list-item-avatar>
+            <v-list-item-content class="list-content py-0">
+              <v-list-item-title class="my-0 mr-1">
+                <span class="font-weight-bold">
+                  {{ pin.displayName }}
+                </span>
+                <span class="font-weight-light">
+                  {{ pin.msg }}
+                </span>
+              </v-list-item-title>
+              <v-list-item-title class="like--text">
+                {{ pin.likes }}
+                <v-icon
+                  v-if="pin.fans.includes(currentUser.uid)"
+                  color="like"
+                  size="15"
+                  class="icon"
+                  >favorite</v-icon
+                >
+                <v-icon v-else color="like" size="15" class="icon"
+                  >favorite_border</v-icon
+                >
+              </v-list-item-title>
+            </v-list-item-content>
+            <v-menu v-if="currentUser.uid === hostUid" offset-x bottom left>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn icon v-bind="attrs" class="menu-btn" v-on="on">
+                  <v-icon size="18">more_vert</v-icon>
+                </v-btn>
+              </template>
 
-            <v-list class="pa-0">
-              <v-list-item
-                v-for="(banBtn, i) in banMenu"
-                :key="i"
-                class="px-2"
-                color="like"
-                @click="banBtn.click(pin)"
-              >
-                <v-list-item-title>ban </v-list-item-title>
-                <v-icon right>{{ banBtn.icon }}</v-icon>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </v-list-item>
+              <v-list class="pa-0">
+                <v-list-item
+                  v-for="(banBtn, i) in banMenu"
+                  :key="i"
+                  class="px-2"
+                  color="like"
+                  @click="banBtn.click(pin)"
+                >
+                  <v-list-item-title>ban </v-list-item-title>
+                  <v-icon right>{{ banBtn.icon }}</v-icon>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+          </v-list-item>
+        </transition-group>
       </v-list>
       <v-divider></v-divider>
     </v-card>
@@ -201,7 +203,6 @@ export default {
       unsubList: [],
       text: '',
       stopDummy: null,
-      currentUser: firebase.auth().currentUser,
       viewers: 0,
       decay: null,
       numLike: 0,
@@ -228,6 +229,9 @@ export default {
     }
   },
   computed: {
+    currentUser() {
+      return firebase.auth().currentUser
+    },
     roomRef() {
       return db.collection('lobby').doc(this.$route.params.id)
     }
@@ -257,7 +261,7 @@ export default {
               currentTime: firebase.firestore.Timestamp.now().toMillis() / 1000,
               ...doc.data()
             }))
-            .sort((a, b) => this.estEndTime(b) - this.estEndTime(a))
+            .sort((a, b) => b.estEndTime - a.estEndTime)
             .slice(0, 2)
         }),
       this.roomRef.collection('viewers').onSnapshot(snapshot => {
@@ -280,12 +284,9 @@ export default {
     this.decay = setInterval(() => {
       if (this.pinList.length === 0) return
       const currentTime = firebase.firestore.Timestamp.now().toMillis() / 1000
-      this.pinList = this.pinList.map(pin => {
-        return {
-          ...pin,
-          estEndTime: this.estEndTime(pin),
-          currentTime
-        }
+      this.pinList.forEach(pin => {
+        pin.estEndTime = this.estEndTime(pin)
+        pin.currentTime = currentTime
       })
       if (
         this.estEndTime(this.pinList[this.pinList.length - 1]) < currentTime
@@ -298,7 +299,7 @@ export default {
             havebeenPinned: true
           })
       }
-    }, 10)
+    }, 1000)
     const chatBox = this.$el.querySelector('.chat-box')
     chatBox.onscroll = () => {
       if (
@@ -336,7 +337,6 @@ export default {
       return (window.innerWidth * (pin.estEndTime - pin.currentTime)) / 15
     },
     send(event) {
-      console.log(event)
       event.target.blur()
       if (this.text.length == 0) return
       this.roomRef.collection('chatList').add({
@@ -397,6 +397,7 @@ export default {
       }
     },
     estEndTime(chat) {
+      // return 6 * chat.likes + chat.timeCreated.toMillis() / 1000 - 25
       const currentTime = firebase.firestore.Timestamp.now().toMillis() / 1000
       if (
         6 * chat.likes + chat.timeCreated.toMillis() / 1000 - 25 >
@@ -518,6 +519,7 @@ export default {
 .guage {
   position: absolute;
   margin-left: -12px;
+  transition: linear all 1s;
 }
 .pin-chat-content {
   display: grid;
@@ -525,5 +527,17 @@ export default {
 }
 .menu-btn {
   margin-right: -16px;
+}
+.flip-list-enter-active,
+.flip-list-leave-active {
+  transition: all 1s;
+}
+.flip-list-enter,
+.flip-list-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+.flip-list-move {
+  transition: transform 0.3s;
 }
 </style>

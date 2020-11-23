@@ -41,10 +41,10 @@ import firebase from 'firebase/app'
 
 export default {
   name: 'App',
-  data: () => ({
-    currentUser: firebase.auth().currentUser
-  }),
   computed: {
+    currentUser() {
+      return firebase.auth().currentUser
+    },
     appBarScroll: function() {
       return {
         'inverted-scroll': this.$route.name === 'Lobby' ? true : false
