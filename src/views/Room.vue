@@ -91,6 +91,7 @@ export default {
       if (!doc.exists) {
         alert('The room does not exists')
         this.$router.push('/lobby')
+        return
       } else if (
         doc.data().banListUid.includes(firebase.auth().currentUser.uid)
       ) {
