@@ -67,7 +67,7 @@
               >
             </v-list-item-title>
           </v-list-item-content>
-          <v-menu v-if="currentUser.uid === hostUid" offset-x="-1" bottom left>
+          <v-menu v-if="currentUser.uid === hostUid" offset-x bottom left>
             <template v-slot:activator="{ on, attrs }">
               <v-btn icon v-bind="attrs" class="menu-btn" v-on="on">
                 <v-icon size="18">more_vert</v-icon>
@@ -122,7 +122,7 @@
               >
             </v-list-item-title>
           </v-list-item-content>
-          <v-menu v-if="currentUser.uid === hostUid" offset-x="-1" bottom left>
+          <v-menu v-if="currentUser.uid === hostUid" offset-x bottom left>
             <template v-slot:activator="{ on, attrs }">
               <v-btn icon v-bind="attrs" class="menu-btn" v-on="on">
                 <v-icon size="18">more_vert</v-icon>
