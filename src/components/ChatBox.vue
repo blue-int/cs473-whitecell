@@ -33,6 +33,12 @@
           class="pin-chat px-3"
           @click="like(pin)"
         >
+          <v-sheet
+            class="guage"
+            height="44"
+            :width="renderGuage(pin)"
+            color="rgba(234,30,99,0.2)"
+          ></v-sheet>
           <v-list-item-avatar
             color="primary"
             size="20"
@@ -45,8 +51,6 @@
               </span>
               <span class="font-weight-light">
                 {{ pin.msg }}
-                {{ pin.estEndTime - pin.timeCreated.toMillis() / 1000 }}
-                {{ pin.estEndTime - pin.currentTime }}
               </span>
             </v-list-item-title>
             <v-list-item-title class="like--text">
@@ -267,6 +271,12 @@ export default {
     this.unsubList.forEach(unsub => unsub())
   },
   methods: {
+    renderGuage(pin) {
+      return (
+        (window.innerWidth * (pin.estEndTime - pin.currentTime)) /
+        (pin.estEndTime - pin.timeCreated.toMillis() / 1000)
+      )
+    },
     send() {
       if (this.text.length == 0) return
       this.roomRef.collection('chatList').add({
@@ -400,10 +410,19 @@ export default {
   z-index: 10;
 }
 .list-content {
+  z-index: 1;
   display: grid;
   grid-template-columns: 1fr min-content;
 }
 .icon {
   padding-bottom: 2px;
+}
+.guage {
+  position: absolute;
+  margin-left: -12px;
+}
+.pin-chat-content {
+  display: grid;
+  grid-template-columns: min-content 1fr;
 }
 </style>
