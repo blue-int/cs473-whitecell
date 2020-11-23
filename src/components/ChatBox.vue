@@ -74,13 +74,16 @@
               </v-btn>
             </template>
 
-            <v-list>
+            <v-list class="pa-0">
               <v-list-item
                 v-for="(banBtn, i) in banMenu"
                 :key="i"
+                class="px-2"
+                color="like"
                 @click="banBtn.click(pin)"
               >
-                <v-list-item-title>{{ banBtn.title }}</v-list-item-title>
+                <v-list-item-title>ban </v-list-item-title>
+                <v-icon right>{{ banBtn.icon }}</v-icon>
               </v-list-item>
             </v-list>
           </v-menu>
@@ -126,13 +129,16 @@
               </v-btn>
             </template>
 
-            <v-list>
+            <v-list class="pa-0">
               <v-list-item
                 v-for="(banBtn, i) in banMenu"
                 :key="i"
+                class="px-2"
+                color="like"
                 @click="banBtn.click(pin)"
               >
-                <v-list-item-title>{{ banBtn.title }}</v-list-item-title>
+                <v-list-item-title>ban </v-list-item-title>
+                <v-icon right>{{ banBtn.icon }}</v-icon>
               </v-list-item>
             </v-list>
           </v-menu>
@@ -203,8 +209,16 @@ export default {
       hasScroll: false,
       jumpBottom: null,
       banMenu: [
-        { title: 'ban chat', click: this.banChat },
-        { title: 'ban fans', click: this.banChat2 }
+        {
+          description: 'ban only user',
+          icon: 'account_circle',
+          click: this.banChat2
+        },
+        {
+          description: 'ban user and fans',
+          icon: 'supervised_user_circle',
+          click: this.banChat
+        }
       ]
     }
   },
