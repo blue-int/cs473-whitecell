@@ -412,6 +412,20 @@ export default {
         })
       }, 300)
     },
+    banUser(targetChat) {
+      if (firebase.auth().currentUser.uid !== this.hostUid) {
+        alert('You are not host!')
+        return
+      } else if (targetChat.uid === this.hostUid) {
+        alert('You cannot ban yourself!')
+        return
+      }
+
+      this.roomRef.update({
+        banListUid: firebase.firestore.FieldValue.arrayUnion(targetChat.uid)
+      })
+    },
+
     banChat(targetChat) {
       if (firebase.auth().currentUser.uid !== this.hostUid) {
         alert('You are not host!')
