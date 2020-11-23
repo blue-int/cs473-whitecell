@@ -15,11 +15,11 @@
       </div>
       <v-spacer></v-spacer>
       <v-btn x-small dark class="my-3 mr-2" color="like" elevation="3">
-        223
+        {{ numLike }}
         <v-icon right size="15">favorite</v-icon>
       </v-btn>
       <v-btn x-small class="my-3" color="secondary" elevation="3">
-        5
+        {{ numPinned }}
         <v-icon right size="15">push_pin</v-icon>
       </v-btn>
     </v-card>
@@ -45,6 +45,8 @@
               </span>
               <span class="font-weight-light">
                 {{ pin.msg }}
+                {{ pin.estEndTime - pin.timeCreated.toMillis() / 1000 }}
+                {{ pin.estEndTime - pin.currentTime }}
               </span>
             </v-list-item-title>
             <v-list-item-title class="like--text">
@@ -158,8 +160,11 @@ export default {
       currentUser: firebase.auth().currentUser,
       viewers: 0,
       decay: null,
+      numLike: 0,
+      numPinned: 0,
       stickBottom: true,
-      hasScroll: false
+      hasScroll: false,
+      jumpBottom: null
     }
   },
   computed: {
@@ -188,28 +193,49 @@ export default {
           this.pinList = snapshot.docs
             .map(doc => ({
               id: doc.id,
+              estEndTime: this.estEndTime(doc.data()),
+              currentTime: firebase.firestore.Timestamp.now().toMillis() / 1000,
               ...doc.data()
             }))
-            .sort((a, b) => this.importance(b) - this.importance(a))
+            .sort((a, b) => this.estEndTime(b) - this.estEndTime(a))
             .slice(0, 2)
         }),
       this.roomRef.collection('viewers').onSnapshot(snapshot => {
         this.viewers = snapshot.size
-      })
+      }),
+      this.roomRef
+        .collection('chatList')
+        .where('uid', '==', this.currentUser.uid)
+        .onSnapshot(snapshot => {
+          this.numLike = snapshot.docs.reduce((acc, doc) => {
+            return acc + doc.data().likes
+          }, 0)
+          this.numPinned = snapshot.docs.filter(
+            doc => doc.data().havebeenPinned || doc.data().pinned
+          ).length
+        })
     ]
   },
   mounted() {
     this.decay = setInterval(() => {
       if (this.pinList.length === 0) return
+      const currentTime = firebase.firestore.Timestamp.now().toMillis() / 1000
+      this.pinList = this.pinList.map(pin => {
+        return {
+          ...pin,
+          estEndTime: this.estEndTime(pin),
+          currentTime
+        }
+      })
       if (
-        this.importance(this.pinList[this.pinList.length - 1]) <
-        firebase.firestore.Timestamp.now().seconds - 30
+        this.estEndTime(this.pinList[this.pinList.length - 1]) < currentTime
       ) {
         this.roomRef
           .collection('chatList')
           .doc(this.pinList[this.pinList.length - 1].id)
           .update({
-            pinned: false
+            pinned: false,
+            havebeenPinned: true
           })
       }
     }, 100)
@@ -252,14 +278,19 @@ export default {
         likes: 0,
         fans: [],
         pinned: false,
-        deleted: false
+        deleted: false,
+        havebeenPinned: false
       })
       this.stickBottom = true
       this.text = ''
     },
     like(chat) {
       // if (chat.fans.includes(this.currentUser.uid) === true) return
-      if (chat.deleted) return
+      if (chat.deleted) {
+        console.log('Deleted message.')
+        return
+      }
+
       this.roomRef
         .collection('chatList')
         .doc(chat.id)
@@ -268,22 +299,35 @@ export default {
           fans: firebase.firestore.FieldValue.arrayUnion(this.currentUser.uid),
           pinned: this.pinned(chat)
         })
+      clearTimeout(this.jumpBottom)
+      this.jumpBottom = setTimeout(() => {
+        this.stickBottom = true
+
+        const chatBox = this.$el.querySelector('.chat-box')
+        chatBox.scrollTop = chatBox.scrollHeight
+      }, 3000)
     },
     pinned(chat) {
       if (chat.likes < 5) return false
-      else if (chat.pinned === true) return true
-      else if (
-        this.importance(chat) <
-        firebase.firestore.Timestamp.now().seconds - 30
-      )
+      if (chat.pinned === true) return true
+      if (
+        this.estEndTime(chat) <
+        firebase.firestore.Timestamp.now().toMillis() / 1000
+      ) {
         return false
-      else if (this.pinList.length < 3) return true
-      else if (
-        this.importance(this.pinList[this.pinList.length - 1]) <
-        this.importance(chat)
-      )
+      }
+      if (
+        this.pinList.length < 3 ||
+        this.estEndTime(this.pinList[this.pinList.length - 1]) <
+          this.estEndTime(chat)
+      ) {
         return true
-      else return false
+      } else {
+        return false
+      }
+    },
+    estEndTime(chat) {
+      return 6 * chat.likes + chat.timeCreated.toMillis() / 1000 - 25
     },
     showDummy() {
       this.stopDummy = setInterval(() => {
@@ -295,9 +339,6 @@ export default {
         })
       }, 300)
     },
-    importance(chat) {
-      return 6 * chat.likes + chat.timeCreated.seconds
-    },
     banChat(targetChat) {
       if (firebase.auth().currentUser.uid !== this.hostUid) {
         alert('You are not host!')
@@ -306,8 +347,9 @@ export default {
       const chatRef = this.roomRef.collection('chatList').doc(targetChat.id)
       chatRef.update({
         msg: 'This message has deleted',
-        likes: 0,
-        pinned: false
+        likes: -1,
+        pinned: false,
+        deleted: true
       })
 
       // Ban chatter & fans
