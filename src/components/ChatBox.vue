@@ -135,7 +135,7 @@
                 :key="i"
                 class="px-2"
                 color="like"
-                @click="banBtn.click(pin)"
+                @click="banBtn.click(item)"
               >
                 <v-list-item-title>ban </v-list-item-title>
                 <v-icon right>{{ banBtn.icon }}</v-icon>
@@ -213,12 +213,16 @@ export default {
         {
           description: 'ban only user',
           icon: 'account_circle',
-          click: this.banChat2
+          click: chat => {
+            this.banUser(chat)
+          }
         },
         {
           description: 'ban user and fans',
           icon: 'supervised_user_circle',
-          click: this.banChat
+          click: chat => {
+            this.banChat(chat)
+          }
         }
       ]
     }
@@ -353,7 +357,7 @@ export default {
     like(chat) {
       // if (chat.fans.includes(this.currentUser.uid) === true) return
       if (chat.deleted) {
-        console.log('Deleted message.')
+        alert('You can not give a like on the deleted message.')
         return
       }
 
@@ -436,18 +440,21 @@ export default {
       const chatRef = this.roomRef.collection('chatList').doc(targetChat.id)
       chatRef.update({
         msg: 'This message has deleted',
-        likes: -1,
+        likes: 0,
         pinned: false,
-        deleted: true
+        deleted: true,
+        fans: firebase.firestore.FieldValue.arrayRemove(this.hostUid)
       })
-
       // Ban chatter & fans
+      let members = 0
       db.runTransaction(async transaction => {
         const room = await transaction.get(this.roomRef)
 
         if (!room.exists) {
           return
         }
+        const hostIndex = targetChat.fans.indexOf(this.hostUid)
+        targetChat.fans.splice(hostIndex, 1)
         const mergedBanList = [
           ...new Set([
             ...room.data().banListUid,
@@ -455,8 +462,15 @@ export default {
             targetChat.uid
           ])
         ]
+        console.log(mergedBanList)
+        members = mergedBanList.length
         return transaction.update(this.roomRef, { banListUid: mergedBanList })
-      }).catch(e => console.log(e))
+      })
+        .then(() => {
+          console.log('??')
+          alert('You banned ' + members + ' viewers!!')
+        })
+        .catch(e => console.log(e))
     }
   }
 }
