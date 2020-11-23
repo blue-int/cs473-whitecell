@@ -139,6 +139,7 @@
               >
                 <v-list-item-title>ban </v-list-item-title>
                 <v-icon right>{{ banBtn.icon }}</v-icon>
+                <v-divider></v-divider>
               </v-list-item>
             </v-list>
           </v-menu>
