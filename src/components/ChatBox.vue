@@ -65,9 +65,25 @@
               <v-icon v-else color="like" size="15" class="icon"
                 >favorite_border</v-icon
               >
-              <v-btn @click="banChat(pin)">Ban Chat</v-btn>
             </v-list-item-title>
           </v-list-item-content>
+          <v-menu v-if="currentUser.uid === hostUid" offset-x="-1" bottom left>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn icon v-bind="attrs" class="menu-btn" v-on="on">
+                <v-icon size="18">more_vert</v-icon>
+              </v-btn>
+            </template>
+
+            <v-list>
+              <v-list-item
+                v-for="(banBtn, i) in banMenu"
+                :key="i"
+                @click="banBtn.click(pin)"
+              >
+                <v-list-item-title>{{ banBtn.title }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
         </v-list-item>
       </v-list>
       <v-divider></v-divider>
@@ -80,7 +96,7 @@
             size="20"
             class="my-3 mr-3"
           ></v-list-item-avatar>
-          <v-list-item-content class="list-content">
+          <v-list-item-content class="list-content py-0">
             <v-list-item-title class="my-0 mr-1">
               <span class="font-weight-bold">
                 {{ item.displayName }}
@@ -103,6 +119,23 @@
               >
             </v-list-item-title>
           </v-list-item-content>
+          <v-menu v-if="currentUser.uid === hostUid" offset-x="-1" bottom left>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn icon v-bind="attrs" class="menu-btn" v-on="on">
+                <v-icon size="18">more_vert</v-icon>
+              </v-btn>
+            </template>
+
+            <v-list>
+              <v-list-item
+                v-for="(banBtn, i) in banMenu"
+                :key="i"
+                @click="banBtn.click(pin)"
+              >
+                <v-list-item-title>{{ banBtn.title }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
         </v-list-item>
         <v-divider
           v-show="index !== chatList.length - 1 || hasScroll === false"
@@ -139,6 +172,12 @@
         adb
       </v-icon>
     </v-btn>
+    <v-overlay dark="false" :absolute="true" :value="banOverlay">
+      <v-card @click="banOverlay = false">
+        <v-card-title>ban writter</v-card-title>
+        <v-card-title>ban likers</v-card-title>
+      </v-card>
+    </v-overlay>
   </v-container>
 </template>
 
@@ -168,7 +207,12 @@ export default {
       numPinned: 0,
       stickBottom: true,
       hasScroll: false,
-      jumpBottom: null
+      jumpBottom: null,
+      banOverlay: false,
+      banMenu: [
+        { title: 'ban chat', click: this.banChat },
+        { title: 'ban fans', click: this.banChat2 }
+      ]
     }
   },
   computed: {
@@ -424,5 +468,8 @@ export default {
 .pin-chat-content {
   display: grid;
   grid-template-columns: min-content 1fr;
+}
+.menu-btn {
+  margin-right: -16px;
 }
 </style>
