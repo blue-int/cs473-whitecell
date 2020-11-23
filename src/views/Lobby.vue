@@ -36,6 +36,9 @@
       <v-card-subtitle class="px-3 pb-3">
         {{ room.hostName }} · {{ room.viewers }} viewers
       </v-card-subtitle>
+      <v-btn dark x-small elevation="3" class="live-btn" color="like">
+        Live
+      </v-btn>
     </v-card>
   </v-container>
 </template>
@@ -130,5 +133,12 @@ export default {
 }
 .goBack-btn {
   margin-left: -12px;
+}
+.live-btn {
+  pointer-events: none;
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 1;
 }
 </style>

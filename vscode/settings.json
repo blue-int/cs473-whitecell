@@ -1,9 +1,0 @@
-{
-    "editor.codeActionsOnSave": {
-      "source.fixAll.eslint": true,
-      "source.fixAll.tslint": true
-    },
-    "editor.formatOnSave": false,
-    "eslint.alwaysShowStatus": true,
-    "vetur.format.defaultFormatter.ts": "prettier-tslint"
-}

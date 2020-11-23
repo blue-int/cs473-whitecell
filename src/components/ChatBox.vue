@@ -49,18 +49,25 @@
             </v-list-item-title>
             <v-list-item-title class="like--text">
               {{ pin.likes }}
-              <v-icon color="like" size="15" class="icon"
+              <v-icon
+                v-if="pin.fans.includes(currentUser.uid)"
+                color="like"
+                size="15"
+                class="icon"
+                >favorite</v-icon
+              >
+              <v-icon v-else color="like" size="15" class="icon"
                 >favorite_border</v-icon
               >
+              <v-btn @click="banChat(pin)">Ban Chat</v-btn>
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
       <v-divider></v-divider>
     </v-card>
-
-    <v-virtual-scroll :items="totChatList" item-height="44" class="chat-box">
-      <template v-slot:default="{ item }">
+    <v-virtual-scroll :items="chatList" item-height="44" class="chat-box">
+      <template v-slot:default="{ index, item }">
         <v-list-item :key="item.id" class="chat px-3" @click="like(item)">
           <v-list-item-avatar
             color="primary"
@@ -78,14 +85,22 @@
             </v-list-item-title>
             <v-list-item-title class="like--text">
               {{ item.likes }}
-              <v-icon color="like" size="15" class="icon"
+              <v-icon
+                v-if="item.fans.includes(currentUser.uid)"
+                color="like"
+                size="15"
+                class="icon"
+                >favorite</v-icon
+              >
+              <v-icon v-else color="like" size="15" class="icon"
                 >favorite_border</v-icon
               >
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-
-        <v-divider></v-divider>
+        <v-divider
+          v-show="index !== chatList.length - 1 || hasScroll === false"
+        ></v-divider>
       </template>
     </v-virtual-scroll>
 
@@ -127,38 +142,37 @@ import firebase from 'firebase/app'
 import { dummyChats } from '@/components/dummy'
 export default {
   name: 'ChatBox',
+  props: {
+    hostUid: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {
       pinList: [],
       chatList: [],
-      dummyChats: [],
-      dummies: [],
-      unsubscribe: [],
+      unsubList: [],
       text: '',
-      stopdummy: null,
+      stopDummy: null,
       currentUser: firebase.auth().currentUser,
       viewers: 0,
       decay: null,
       numLike: 0,
-      numPinned: 0
+      numPinned: 0,
+      stickBottom: true,
+      hasScroll: false,
+      jumpBottom: null
     }
   },
   computed: {
     roomRef() {
       return db.collection('lobby').doc(this.$route.params.id)
-    },
-    totChatList() {
-      return this.chatList.concat(this.dummies).sort((a, b) => {
-        if (a.timeCreated === null) return 1
-        if (b.timeCreated === null) return -1
-        return a.timeCreated.toMillis() - b.timeCreated.toMillis()
-      })
     }
     //sum: 0
   },
-  created() {
-    this.dummyChats = dummyChats.slice()
-    this.unsubscribe = [
+  async created() {
+    this.unsubList = [
       this.roomRef
         .collection('chatList')
         .orderBy('timeCreated', 'desc')
@@ -228,14 +242,32 @@ export default {
           })
       }
     }, 100)
+    const chatBox = this.$el.querySelector('.chat-box')
+    chatBox.onscroll = () => {
+      if (chatBox.scrollHeight !== chatBox.scrollTop + chatBox.clientHeight) {
+        this.stickBottom = false
+      } else {
+        this.stickBottom = true
+      }
+    }
   },
   updated() {
     const chatBox = this.$el.querySelector('.chat-box')
-    chatBox.scrollTop = chatBox.scrollHeight
+    if (this.stickBottom === true) chatBox.scrollTop = chatBox.scrollHeight
+    this.$nextTick(() => {
+      const scrollHeight = chatBox.scrollHeight
+      const clientHeight = chatBox.clientHeight
+      if (scrollHeight > clientHeight) {
+        this.hasScroll = true
+      } else {
+        this.hasScroll = false
+      }
+    })
   },
   destroyed() {
-    clearInterval(this.stopdummy)
-    this.unsubscribe.forEach(unsub => unsub())
+    clearInterval(this.stopDummy)
+    clearInterval(this.decay)
+    this.unsubList.forEach(unsub => unsub())
   },
   methods: {
     send() {
@@ -253,20 +285,31 @@ export default {
         havebeenPinned: false,
         leftpinnedTime: 0
       })
+      this.stickBottom = true
       this.text = ''
     },
     like(chat) {
       // if (chat.fans.includes(this.currentUser.uid) === true) return
-      if (chat.deleted) return
-      const chatRef =
-        chat.uid === 'dummy'
-          ? db.collection('dummies').doc(chat.id)
-          : this.roomRef.collection('chatList').doc(chat.id)
-      chatRef.update({
-        likes: firebase.firestore.FieldValue.increment(1),
-        fans: firebase.firestore.FieldValue.arrayUnion(this.currentUser.uid),
-        pinned: this.pinned(chat)
-      })
+      if (chat.deleted) {
+        console.log('Deleted message.')
+        return
+      }
+
+      this.roomRef
+        .collection('chatList')
+        .doc(chat.id)
+        .update({
+          likes: firebase.firestore.FieldValue.increment(1),
+          fans: firebase.firestore.FieldValue.arrayUnion(this.currentUser.uid),
+          pinned: this.pinned(chat)
+        })
+      clearTimeout(this.jumpBottom)
+      this.jumpBottom = setTimeout(() => {
+        this.stickBottom = true
+
+        const chatBox = this.$el.querySelector('.chat-box')
+        chatBox.scrollTop = chatBox.scrollHeight
+      }, 3000)
     },
     pinned(chat) {
       if (chat.likes < 5) return false
@@ -290,39 +333,48 @@ export default {
       console.log(chat.pinned)
       return chat.pinned
     },
-    addDummy() {
-      for (const [index, dummy] of this.dummyChats.entries()) {
-        db.collection('dummies').add({
-          index,
+    showDummy() {
+      this.stopDummy = setInterval(() => {
+        const dummy = dummyChats.shift()
+        if (dummy === undefined) return clearInterval(this.stopDummy)
+        this.roomRef.collection('chatList').add({
+          timeCreated: firebase.firestore.FieldValue.serverTimestamp(),
           ...dummy
         })
-      }
-    },
-    showDummy() {
-      this.unsubscribe.push(
-        db
-          .collection('dummies')
-          .orderBy('index')
-          .onSnapshot(snapshot => {
-            const dummies = snapshot.docs.map(doc => {
-              return {
-                id: doc.id,
-                ...doc.data()
-              }
-            })
-            this.stopdummy = setInterval(() => {
-              const dummy = dummies.shift()
-              if (dummy === undefined) return clearInterval(this.stopdummy)
-              this.dummies.push({
-                timeCreated: firebase.firestore.Timestamp.now(),
-                ...dummy
-              })
-            }, 140)
-          })
-      )
+      }, 300)
     },
     importance(chat) {
       return 6 * chat.likes + chat.timeCreated.seconds
+    },
+    banChat(targetChat) {
+      if (firebase.auth().currentUser.uid !== this.hostUid) {
+        alert('You are not host!')
+        return
+      }
+      const chatRef = this.roomRef.collection('chatList').doc(targetChat.id)
+      chatRef.update({
+        msg: 'This message has deleted',
+        likes: -1,
+        pinned: false,
+        deleted: true
+      })
+
+      // Ban chatter & fans
+      db.runTransaction(async transaction => {
+        const room = await transaction.get(this.roomRef)
+
+        if (!room.exists) {
+          return
+        }
+        const mergedBanList = [
+          ...new Set([
+            ...room.data().banListUid,
+            ...targetChat.fans,
+            targetChat.uid
+          ])
+        ]
+        return transaction.update(this.roomRef, { banListUid: mergedBanList })
+      }).catch(e => console.log(e))
     }
   }
 }

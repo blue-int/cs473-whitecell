@@ -34,7 +34,7 @@
         <v-col class="py-1"> Ban| {{ name.displayName }} </v-col>
       </v-row>
     </v-card>
-    <ChatBox />
+    <ChatBox :host-uid="hostUid" />
     <!-- <v-row>
       <v-col>
         <vue-plyr>
@@ -72,7 +72,7 @@ export default {
     return {
       title: '',
       hostName: '',
-      hoseUid: null,
+      hostUid: null,
       viewers: [],
       unsubList: []
     }
@@ -84,22 +84,20 @@ export default {
   },
   async created() {
     const banSnapshot = this.roomRef.onSnapshot(async doc => {
-      if (doc.data().banListUid.includes(firebase.auth().currentUser.uid)) {
+      if (!doc.exists) {
+        alert('The room does not exists')
+        this.$router.push('/lobby')
+      } else if (
+        doc.data().banListUid.includes(firebase.auth().currentUser.uid)
+      ) {
         alert('You are banned!!')
         this.$router.push('/lobby')
       }
-    })
-    this.unsubList.push(banSnapshot)
-
-    const doc = await this.roomRef.get()
-    if (!doc.exists) {
-      alert('The room does not exists')
-      this.$router.push('/lobby')
-    } else {
       this.title = doc.data().title
       this.hostName = doc.data().hostName
       this.hostUid = doc.data().hostUid
-    }
+    })
+    this.unsubList.push(banSnapshot)
   },
   mounted() {
     const viewerSnapshot = this.roomRef
@@ -117,48 +115,19 @@ export default {
   },
   methods: {
     banUser(banUid) {
-      if (firebase.auth().currentUser.uid != this.hostUid) {
+      if (firebase.auth().currentUser.uid !== this.hostUid) {
         alert('You are not host!')
         return
+      } else if (banUid === this.hostUid) {
+        alert('You cannot ban yourself!')
+        return
       }
-      // const banUID = this.viewers.find(user => {
-      //   return user.displayName === userName
-      // }) // find uid from viewers via userName
 
       this.roomRef.update({
         banListUid: firebase.firestore.FieldValue.arrayUnion(banUid)
       })
     },
 
-    banChat(targetChat) {
-      if (firebase.auth().currentUser.uid != this.hostUid) {
-        alert('You are not host!')
-        return
-      }
-
-      db.collection('lobby')
-        .doc(this.$route.params.id)
-        .collection('chatList')
-        .doc(targetChat.id)
-        .update({
-          msg: 'This message has deleted',
-          likes: 0,
-          pinned: false
-        })
-
-      // Ban chatter & fans
-
-      this.roomRef.update({
-        banListUid: firebase.firestore.FieldValue.arrayUnion(targetChat.uid)
-      })
-      while (targetChat.fans.length > 0) {
-        this.roomRef.update({
-          banListUid: firebase.firestore.FieldValue.arrayUnion(
-            targetChat.fans.pop()
-          )
-        })
-      }
-    },
     async stopStream() {
       this.roomRef.delete()
       this.$router.push('/lobby')
@@ -175,48 +144,34 @@ export default {
     }
     const roomRef = db.collection('lobby').doc(to.params.id)
 
-    // let subscribe = roomRef.onSnapshot(doc => {
-    //   if (doc.data().banListUid.includes(firebase.auth().currentUser.uid)) {
-    //     alert('You are banned!!')
-    //     subscribe()
-    //     next('/lobby')
-    //     return
-    //   }
-    // })
-    // })
-
-    roomRef.update({
+    const batch = db.batch()
+    batch.update(roomRef, {
       viewers: firebase.firestore.FieldValue.increment(1)
     })
-    roomRef
-      .collection('viewers')
-      .doc(userInfo.uid)
-      .set(userInfo)
+    batch.set(roomRef.collection('viewers').doc(userInfo.uid), userInfo)
+    batch.commit()
 
     next()
   },
   beforeRouteLeave: async (to, from, next) => {
     const roomRef = db.collection('lobby').doc(from.params.id)
 
-    roomRef
-      .update({
-        viewers: firebase.firestore.FieldValue.increment(-1)
-      })
-      .catch(() => {
-        // console.log('Stop Stream')
-      })
-    roomRef
-      .collection('viewers')
-      .doc(firebase.auth().currentUser.uid)
-      .delete()
-
+    const batch = db.batch()
+    batch.update(roomRef, {
+      viewers: firebase.firestore.FieldValue.increment(-1)
+    })
+    batch.delete(
+      roomRef.collection('viewers').doc(firebase.auth().currentUser.uid)
+    )
+    batch.commit().catch(() => {
+      // console.log('Stop Stream')
+    })
     next()
   }
 }
 </script>
 <style lang="scss" scoped>
 .room-container {
-  //hard coded.. fix soon
   height: 100vh;
 
   display: grid;
