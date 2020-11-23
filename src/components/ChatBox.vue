@@ -15,11 +15,11 @@
       </div>
       <v-spacer></v-spacer>
       <v-btn x-small dark class="my-3 mr-2" color="like" elevation="3">
-        223
+        {{ numLike }}
         <v-icon right size="15">favorite</v-icon>
       </v-btn>
       <v-btn x-small class="my-3" color="secondary" elevation="3">
-        5
+        {{ numPinned }}
         <v-icon right size="15">push_pin</v-icon>
       </v-btn>
     </v-card>
@@ -44,7 +44,7 @@
                 {{ pin.displayName }}
               </span>
               <span class="font-weight-light">
-                {{ pin.msg }}
+                {{ pin.msg }} {{ pin.leftpinnedTime }}
               </span>
             </v-list-item-title>
             <v-list-item-title class="like--text">
@@ -158,6 +158,8 @@ export default {
       currentUser: firebase.auth().currentUser,
       viewers: 0,
       decay: null,
+      numLike: 0,
+      numPinned: 0,
       stickBottom: true,
       hasScroll: false,
       jumpBottom: null
@@ -167,6 +169,7 @@ export default {
     roomRef() {
       return db.collection('lobby').doc(this.$route.params.id)
     }
+    //sum: 0
   },
   async created() {
     this.unsubList = [
@@ -196,21 +199,46 @@ export default {
         }),
       this.roomRef.collection('viewers').onSnapshot(snapshot => {
         this.viewers = snapshot.size
-      })
+      }),
+      this.roomRef
+        .collection('chatList')
+        .where('uid', '==', this.currentUser.uid)
+        .onSnapshot(snapshot => {
+          this.numLike = 0
+          snapshot.forEach(doc => {
+            this.numLike = this.numLike + doc.data().likes
+          })
+        }),
+      this.roomRef
+        .collection('chatList')
+        .where('uid', '==', this.currentUser.uid)
+        .where('havebeenPinned', '==', true)
+        .onSnapshot(snapshot => {
+          this.numPinned = snapshot.size
+        })
     ]
   },
   mounted() {
     this.decay = setInterval(() => {
       if (this.pinList.length === 0) return
+      var i = 0
+      while (i < this.pinList.length) {
+        this.pinList[i].leftpinnedTime =
+          this.importance(this.pinList[i]) -
+          firebase.firestore.Timestamp.now().seconds -
+          25
+        i++
+      }
       if (
         this.importance(this.pinList[this.pinList.length - 1]) <
-        firebase.firestore.Timestamp.now().seconds - 30
+        firebase.firestore.Timestamp.now().seconds + 25
       ) {
         this.roomRef
           .collection('chatList')
           .doc(this.pinList[this.pinList.length - 1].id)
           .update({
-            pinned: false
+            pinned: false,
+            havebeenPinned: true
           })
       }
     }, 100)
@@ -253,7 +281,9 @@ export default {
         likes: 0,
         fans: [],
         pinned: false,
-        deleted: false
+        deleted: false,
+        havebeenPinned: false,
+        leftpinnedTime: 0
       })
       this.stickBottom = true
       this.text = ''
@@ -283,19 +313,25 @@ export default {
     },
     pinned(chat) {
       if (chat.likes < 5) return false
-      else if (chat.pinned === true) return true
-      else if (
+      if (chat.pinned === true) return true
+      if (
         this.importance(chat) <
-        firebase.firestore.Timestamp.now().seconds - 30
+        firebase.firestore.Timestamp.now().seconds + 25
       )
         return false
-      else if (this.pinList.length < 3) return true
-      else if (
+      if (
+        this.pinList.length < 3 ||
         this.importance(this.pinList[this.pinList.length - 1]) <
-        this.importance(chat)
-      )
+          this.importance(chat)
+      ) {
         return true
-      else return false
+      } else {
+        return false
+      }
+    },
+    havebeenPinned(chat) {
+      console.log(chat.pinned)
+      return chat.pinned
     },
     showDummy() {
       this.stopDummy = setInterval(() => {
