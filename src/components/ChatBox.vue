@@ -453,7 +453,13 @@ export default {
         return transaction.update(this.roomRef, { banListUid: mergedBanList })
       })
         .then(() => {
-          if (banCount !== 0) {
+          if (targetChat.uid === 'dummy') {
+            alert(
+              'You banned ' +
+                (targetChat.likes + 1 + Math.floor(Math.random() * 10)) +
+                ' viewers!!'
+            )
+          } else if (banCount !== 0) {
             alert('You banned ' + banCount + ' viewers!!')
           } else {
             alert('Nobody has banned: Did you try to ban yourself?')
