@@ -35,9 +35,9 @@
             @click="like(pin)"
           >
             <v-sheet
-              class="guage"
+              class="gauge"
               height="44"
-              :width="renderGuage(pin)"
+              :width="renderGauge(pin)"
               color="rgba(234,30,99,0.2)"
             ></v-sheet>
             <v-list-item-avatar
@@ -306,7 +306,7 @@ export default {
     this.unsubList.forEach(unsub => unsub())
   },
   methods: {
-    renderGuage(pin) {
+    renderGauge(pin) {
       return (window.innerWidth * (pin.estEndTime - pin.currentTime)) / 15
     },
     send(event) {
@@ -340,7 +340,8 @@ export default {
         .update({
           likes: firebase.firestore.FieldValue.increment(1),
           fans: firebase.firestore.FieldValue.arrayUnion(this.currentUser.uid),
-          pinned: this.pinned(chat)
+          pinned: this.pinned(chat),
+          lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
         })
       clearTimeout(this.jumpBottom)
       this.jumpBottom = setTimeout(() => {
@@ -370,15 +371,18 @@ export default {
       }
     },
     estEndTime(chat) {
-      // return 6 * chat.likes + chat.timeCreated.toMillis() / 1000 - 25
-      const currentTime = firebase.firestore.Timestamp.now().toMillis() / 1000
+      const lastUpdated =
+        chat.lastUpdated !== null
+          ? chat.lastUpdated
+          : firebase.firestore.Timestamp.now()
+
       if (
-        6 * chat.likes + chat.timeCreated.toMillis() / 1000 - 25 >
-        currentTime + 15
+        2 * chat.likes + chat.timeCreated.toMillis() / 1000 - 10 >
+        lastUpdated.toMillis() / 1000 + 15
       ) {
-        return currentTime + 15
+        return lastUpdated.toMillis() / 1000 + 15
       } else {
-        return 6 * chat.likes + chat.timeCreated.toMillis() / 1000 - 25
+        return 2 * chat.likes + chat.timeCreated.toMillis() / 1000 - 10
       }
     },
     decay() {
@@ -493,7 +497,7 @@ export default {
 .icon {
   padding-bottom: 2px;
 }
-.guage {
+.gauge {
   position: absolute;
   margin-left: -12px;
   transition: linear all 1s;
