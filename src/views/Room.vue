@@ -62,7 +62,8 @@ export default {
       hostName: '',
       hostUid: null,
       viewers: [],
-      unsubList: []
+      unsubList: [],
+      stopDummy: null
     }
   },
   computed: {
@@ -106,6 +107,7 @@ export default {
     this.unsubList.push(viewerSnapshot)
   },
   destroyed() {
+    clearInterval(this.stopDummy)
     this.unsubList.forEach(unsub => unsub())
   },
   methods: {
