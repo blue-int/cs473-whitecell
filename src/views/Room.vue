@@ -37,17 +37,6 @@
         clear
       </v-icon>
     </v-btn>
-    <v-card class="ban-card" elevation="12">
-      <v-row
-        v-for="name in viewers"
-        :key="name.id"
-        class="px-2"
-        no-gutters
-        @click="banUser(name.uid)"
-      >
-        <v-col class="py-1"> Ban| {{ name.displayName }} </v-col>
-      </v-row>
-    </v-card>
     <ChatBox :host-uid="hostUid" />
     <v-toolbar elevation="0" color="transparent" class="float-toolbar">
       <v-btn icon dark class="goBack-btn" @click="$router.push('/lobby')">
