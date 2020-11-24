@@ -1,18 +1,31 @@
 <template>
   <v-container fluid class="pa-0 room-container">
-    <vue-plyr>
-      <div class="plyr__video-embed">
-        <iframe
-          src="https://www.youtube.com/embed/bTqVqk7FSmY?amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1"
-          allowfullscreen
-          allowtransparency
-          allow="autoplay"
-        ></iframe>
-      </div>
+    <vue-plyr ref="plyr">
+      <video controls playsinline>
+        <source
+          size="1080"
+          src="https://clips-media-assets2.twitch.tv/40278264606-offset-4760.mp4"
+          type="video/mp4"
+        />
+      </video>
     </vue-plyr>
     <v-btn
       v-if="hostUid === currentUser.uid"
-      class="ma-3 float-btn"
+      class="ma-3 float-btn dummy"
+      elevation="12"
+      fab
+      dark
+      x-small
+      color="#3e7495"
+      @click="showDummy()"
+    >
+      <v-icon dark>
+        adb
+      </v-icon>
+    </v-btn>
+    <v-btn
+      v-if="hostUid === currentUser.uid"
+      class="ma-3 float-btn stop"
       elevation="12"
       fab
       dark
@@ -36,22 +49,6 @@
       </v-row>
     </v-card>
     <ChatBox :host-uid="hostUid" />
-    <!-- <v-row>
-      <v-col>
-        <vue-plyr>
-          <div>
-            <iframe
-              src="https://clips.twitch.tv/embed?clip=BlazingGeniusPotUncleNox&parent=cs473-whitecell.web.app"
-              frameborder="0"
-              allowfullscreen="true"
-              scrolling="no"
-              height="378"
-              width="620"
-            ></iframe>
-          </div>
-        </vue-plyr>
-      </v-col>
-    </v-row> -->
     <v-toolbar elevation="0" color="transparent" class="float-toolbar">
       <v-btn icon dark class="goBack-btn" @click="$router.push('/lobby')">
         <v-icon>arrow_back</v-icon>
@@ -64,6 +61,7 @@
 import firebase from 'firebase/app'
 import { db } from '@/components/firebaseInit'
 import ChatBox from '@/components/ChatBox'
+import { dummyChats } from '@/components/dummy'
 export default {
   name: 'Room',
   components: {
@@ -101,6 +99,9 @@ export default {
       this.title = doc.data().title
       this.hostName = doc.data().hostName
       this.hostUid = doc.data().hostUid
+      if (doc.data().start === true) {
+        this.$refs.plyr.player.play()
+      }
     })
     this.unsubList.push(banSnapshot)
   },
@@ -119,6 +120,26 @@ export default {
     this.unsubList.forEach(unsub => unsub())
   },
   methods: {
+    showDummy() {
+      clearInterval(this.stopDummy)
+      const tempDummies = dummyChats.slice()
+      this.stopDummy = setInterval(() => {
+        const dummy = tempDummies.shift()
+        if (dummy === undefined) {
+          this.roomRef.update({
+            start: false
+          })
+          return clearInterval(this.stopDummy)
+        }
+        this.roomRef.collection('chatList').add({
+          timeCreated: firebase.firestore.FieldValue.serverTimestamp(),
+          ...dummy
+        })
+      }, 140)
+      this.roomRef.update({
+        start: true
+      })
+    },
     stopStream() {
       this.roomRef.delete()
       this.$router.push('/lobby')
@@ -170,9 +191,14 @@ export default {
 }
 .float-btn {
   position: fixed;
-  bottom: 56px;
   right: 0;
   z-index: 10;
+  &.dummy {
+    bottom: 100px;
+  }
+  &.stop {
+    bottom: 56px;
+  }
 }
 .float-toolbar {
   position: fixed;

@@ -168,26 +168,12 @@
         />
       </v-toolbar>
     </v-card>
-    <v-btn
-      class="ma-3 float-btn"
-      elevation="12"
-      fab
-      dark
-      x-small
-      color="#3e7495"
-      @click="showDummy()"
-    >
-      <v-icon dark>
-        adb
-      </v-icon>
-    </v-btn>
   </v-container>
 </template>
 
 <script>
 import { db } from '@/components/firebaseInit'
 import firebase from 'firebase/app'
-import { dummyChats } from '@/components/dummy'
 export default {
   name: 'ChatBox',
   props: {
@@ -241,6 +227,7 @@ export default {
       this.roomRef
         .collection('chatList')
         .orderBy('timeCreated', 'desc')
+        .limit(1000)
         .onSnapshot(snapshot => {
           this.chatList = snapshot.docs
             .map(doc => ({
@@ -253,6 +240,7 @@ export default {
         .collection('chatList')
         .where('pinned', '==', true)
         .orderBy('timeCreated', 'desc')
+        .limit(100)
         .onSnapshot(snapshot => {
           this.pinList = snapshot.docs
             .map(doc => ({
@@ -287,8 +275,9 @@ export default {
     const chatBox = this.$el.querySelector('.chat-box')
     chatBox.onscroll = () => {
       if (
-        chatBox.scrollHeight !==
-        parseInt(chatBox.scrollTop + chatBox.clientHeight, 10)
+        chatBox.scrollHeight -
+          Math.round(chatBox.scrollTop + chatBox.clientHeight) >
+        1
       ) {
         this.stickBottom = false
       } else {
@@ -359,7 +348,7 @@ export default {
 
         const chatBox = this.$el.querySelector('.chat-box')
         chatBox.scrollTop = chatBox.scrollHeight
-      }, 3000)
+      }, 1000)
     },
     pinned(chat) {
       if (chat.likes < 5) return false
@@ -412,17 +401,6 @@ export default {
             })
         }
       }, 1000)
-    },
-    showDummy() {
-      const tempDummies = dummyChats.slice()
-      this.stopDummy = setInterval(() => {
-        const dummy = tempDummies.shift()
-        if (dummy === undefined) return clearInterval(this.stopDummy)
-        this.roomRef.collection('chatList').add({
-          timeCreated: firebase.firestore.FieldValue.serverTimestamp(),
-          ...dummy
-        })
-      }, 300)
     },
     banUser(targetChat) {
       if (firebase.auth().currentUser.uid !== this.hostUid) {
@@ -506,12 +484,6 @@ export default {
 }
 .pin-box {
   grid-column: 1/-1;
-}
-.float-btn {
-  position: fixed;
-  bottom: 100px;
-  right: 0;
-  z-index: 10;
 }
 .list-content {
   z-index: 1;

@@ -105,7 +105,8 @@ export default {
           hostUid: firebase.auth().currentUser.uid,
           banListUid: [],
           timeCreated: firebase.firestore.FieldValue.serverTimestamp(),
-          viewers: 0
+          viewers: 0,
+          start: false
         }
         const docRef = await db.collection('lobby').add(newRoom)
 
