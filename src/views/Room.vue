@@ -125,7 +125,7 @@ export default {
         }
         if (i++ % 2 == 1) return
         this.roomRef.collection('chatList').add({
-          timeCreated: firebase.firestore.FieldValue.serverTimestamp(),
+          timeCreated: firebase.firestore.Timestamp.now(),
           ...dummy
         })
       }, 140)
