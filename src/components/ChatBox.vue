@@ -28,7 +28,15 @@
       <v-divider v-if="pinList.length !== 0"></v-divider>
       <v-list class="py-0 pin-box" color="rgb(245,245,245)">
         <transition-group name="flip-list" tag="div">
-          <v-list-item
+          <div
+            v-for="pin in pinList"
+            :key="pin.id"
+            class="pin-chat"
+            @click="like(pin)"
+          >
+            {{ pin.msg }} {{ pin.likes }}
+          </div>
+          <!-- <v-list-item
             v-for="pin in pinList"
             :key="pin.id"
             class="pin-chat px-3"
@@ -88,12 +96,91 @@
                 </v-list-item>
               </v-list>
             </v-menu>
-          </v-list-item>
+          </v-list-item> -->
         </transition-group>
       </v-list>
       <v-divider></v-divider>
     </v-card>
-    <v-virtual-scroll :items="chatList" item-height="44" class="chat-box">
+    <DynamicScroller
+      ref="scroller"
+      :items="chatList"
+      :min-item-size="44"
+      class="chat-box"
+    >
+      <template v-slot="{ item, index, active }">
+        <DynamicScrollerItem
+          :item="item"
+          :active="active"
+          :data-index="index"
+          class="chat"
+          @click.native="like(item)"
+        >
+          <hr />
+          {{ item.displayName }}
+          <hr />
+          {{ item.msg }}
+          <hr />
+          {{ item.likes }}
+          <!-- <div>개빡친다</div> -->
+          <!-- <v-list-item @click="like(item)">
+            <v-list-item-avatar
+              color="primary"
+              size="20"
+              class="my-3 mr-3"
+            ></v-list-item-avatar>
+            <v-list-item-content class="list-content py-0">
+              <v-list-item-title class="my-0 mr-1">
+                <span class="font-weight-bold">
+                  {{ item.displayName }}
+                </span>
+                <span class="font-weight-light">
+                  {{ item.msg }}
+                </span>
+              </v-list-item-title>
+              <v-list-item-title class="like--text">
+                {{ item.likes }}
+                <v-icon
+                  v-if="item.fans.includes(currentUser.uid)"
+                  color="like"
+                  size="15"
+                  class="icon"
+                >
+                  favorite
+                </v-icon>
+                <v-icon v-else color="like" size="15" class="icon">
+                  favorite_border
+                </v-icon>
+              </v-list-item-title>
+            </v-list-item-content>
+            <v-menu v-if="currentUser.uid === hostUid" offset-x bottom left>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn icon v-bind="attrs" class="menu-btn" v-on="on">
+                  <v-icon size="18">more_vert</v-icon>
+                </v-btn>
+              </template>
+
+              <v-list class="pa-0">
+                <v-list-item
+                  v-for="(banBtn, i) in banMenu"
+                  :key="i"
+                  class="px-2"
+                  color="like"
+                  @click="banBtn.click(item)"
+                >
+                  <v-list-item-title>ban </v-list-item-title>
+                  <v-icon right>{{ banBtn.icon }}</v-icon>
+                  <v-divider></v-divider>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+          </v-list-item>
+          <v-divider
+            v-show="index !== chatList.length - 1 || hasScroll === false"
+          ></v-divider> -->
+        </DynamicScrollerItem>
+      </template>
+    </DynamicScroller>
+    <!-- <v-virtual-scroll :items="chatList" item-height="44" class="chat-box">
       <template v-slot:default="{ index, item }">
         <v-list-item :key="item.id" class="chat px-3" @click="like(item)">
           <v-list-item-avatar
@@ -150,7 +237,7 @@
           v-show="index !== chatList.length - 1 || hasScroll === false"
         ></v-divider>
       </template>
-    </v-virtual-scroll>
+    </v-virtual-scroll> -->
 
     <v-card class="rounded-0" elevation="0">
       <v-divider></v-divider>
@@ -188,7 +275,6 @@ export default {
       chatList: [],
       unsubList: [],
       text: '',
-      stopDummy: null,
       viewers: 0,
       stopDecay: null,
       numLike: 0,
@@ -226,27 +312,43 @@ export default {
     this.unsubList = [
       this.roomRef
         .collection('chatList')
+        .limit(200)
         .orderBy('timeCreated', 'desc')
-        .limit(1000)
         .onSnapshot(snapshot => {
-          this.chatList = snapshot.docs
-            .map(doc => ({
-              id: doc.id,
-              ...doc.data()
-            }))
-            .reverse()
+          snapshot.docChanges().forEach(change => {
+            if (change.type === 'added') {
+              this.chatList.push({
+                id: change.doc.id,
+                ...change.doc.data()
+              })
+              if (this.stickBottom) this.$refs.scroller.scrollToBottom()
+            }
+            if (change.type === 'modified') {
+              this.chatList[change.newIndex].likes = change.doc.data().likes
+              this.chatList[change.newIndex].fans = change.doc.data().fans
+              this.chatList[
+                change.newIndex
+              ].lastUpdated = change.doc.data().lastUpdated
+            }
+            if (change.type === 'removed') {
+              console.log('removed')
+            }
+          })
         }),
       this.roomRef
         .collection('chatList')
         .where('pinned', '==', true)
         .orderBy('timeCreated', 'desc')
-        .limit(100)
+        .limit(2)
         .onSnapshot(snapshot => {
+          const currentTime =
+            firebase.firestore.Timestamp.now().toMillis() / 1000
+          this.lastUpdated = currentTime
           this.pinList = snapshot.docs
             .map(doc => ({
               id: doc.id,
               estEndTime: this.estEndTime(doc.data()),
-              currentTime: firebase.firestore.Timestamp.now().toMillis() / 1000,
+              currentTime: currentTime,
               ...doc.data()
             }))
             .sort((a, b) => b.estEndTime - a.estEndTime)
@@ -287,9 +389,6 @@ export default {
   },
   updated() {
     const chatBox = this.$el.querySelector('.chat-box')
-    if (this.stickBottom === true) {
-      chatBox.scrollTop = chatBox.scrollHeight
-    }
     this.$nextTick(() => {
       const scrollHeight = chatBox.scrollHeight
       const clientHeight = chatBox.clientHeight
@@ -301,7 +400,6 @@ export default {
     })
   },
   destroyed() {
-    clearInterval(this.stopDummy)
     clearInterval(this.stopDecay)
     this.unsubList.forEach(unsub => unsub())
   },
@@ -316,7 +414,7 @@ export default {
         uid: this.currentUser.uid,
         displayName: this.currentUser.displayName,
         photoURL: this.currentUser.photoURL,
-        timeCreated: firebase.firestore.FieldValue.serverTimestamp(),
+        timeCreated: firebase.firestore.Timestamp.now(),
         msg: this.text,
         likes: 0,
         fans: [],
@@ -341,7 +439,7 @@ export default {
           likes: firebase.firestore.FieldValue.increment(1),
           fans: firebase.firestore.FieldValue.arrayUnion(this.currentUser.uid),
           pinned: this.pinned(chat),
-          lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+          lastUpdated: firebase.firestore.Timestamp.now()
         })
       clearTimeout(this.jumpBottom)
       this.jumpBottom = setTimeout(() => {
@@ -371,40 +469,35 @@ export default {
       }
     },
     estEndTime(chat) {
-      const lastUpdated =
-        chat.lastUpdated !== null
-          ? chat.lastUpdated
-          : firebase.firestore.Timestamp.now()
-
       if (
         2 * chat.likes + chat.timeCreated.toMillis() / 1000 - 10 >
-        lastUpdated.toMillis() / 1000 + 15
+        chat.lastUpdated.toMillis() / 1000 + 15
       ) {
-        return lastUpdated.toMillis() / 1000 + 15
+        return chat.lastUpdated.toMillis() / 1000 + 15
       } else {
         return 2 * chat.likes + chat.timeCreated.toMillis() / 1000 - 10
       }
     },
     decay() {
-      return setInterval(() => {
-        if (this.pinList.length === 0) return
-        const currentTime = firebase.firestore.Timestamp.now().toMillis() / 1000
-        this.pinList.forEach(pin => {
-          pin.estEndTime = this.estEndTime(pin)
-          pin.currentTime = currentTime
-        })
-        if (
-          this.estEndTime(this.pinList[this.pinList.length - 1]) < currentTime
-        ) {
-          this.roomRef
-            .collection('chatList')
-            .doc(this.pinList[this.pinList.length - 1].id)
-            .update({
-              pinned: false,
-              havebeenPinned: true
-            })
-        }
-      }, 1000)
+      // return setInterval(() => {
+      //   if (this.pinList.length === 0) return
+      //   const currentTime = firebase.firestore.Timestamp.now().toMillis() / 1000
+      //   this.pinList.forEach(pin => {
+      //     pin.estEndTime = this.estEndTime(pin)
+      //     pin.currentTime = currentTime
+      //   })
+      //   if (
+      //     this.estEndTime(this.pinList[this.pinList.length - 1]) < currentTime
+      //   ) {
+      //     this.roomRef
+      //       .collection('chatList')
+      //       .doc(this.pinList[this.pinList.length - 1].id)
+      //       .update({
+      //         pinned: false,
+      //         havebeenPinned: true
+      //       })
+      //   }
+      // }, 1000)
     },
     banUser(targetChat) {
       if (firebase.auth().currentUser.uid !== this.hostUid) {
@@ -480,6 +573,9 @@ export default {
   display: grid;
   grid-template-rows: min-content min-content minmax(0, 1fr) min-content;
   overflow-y: hidden;
+}
+.chat-box {
+  height: 100%;
 }
 .header {
   display: grid;
