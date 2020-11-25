@@ -115,11 +115,8 @@
           class="chat"
           @click.native="like(item)"
         >
-          <hr />
           {{ item.displayName }}
-          <hr />
           {{ item.msg }}
-          <hr />
           {{ item.likes }}
           <!-- <div>개빡친다</div> -->
           <!-- <v-list-item @click="like(item)">
@@ -315,25 +312,15 @@ export default {
         .limit(200)
         .orderBy('timeCreated', 'desc')
         .onSnapshot(snapshot => {
-          snapshot.docChanges().forEach(change => {
-            if (change.type === 'added') {
-              this.chatList.push({
-                id: change.doc.id,
-                ...change.doc.data()
-              })
-              if (this.stickBottom) this.$refs.scroller.scrollToBottom()
-            }
-            if (change.type === 'modified') {
-              this.chatList[change.newIndex].likes = change.doc.data().likes
-              this.chatList[change.newIndex].fans = change.doc.data().fans
-              this.chatList[
-                change.newIndex
-              ].lastUpdated = change.doc.data().lastUpdated
-            }
-            if (change.type === 'removed') {
-              console.log('removed')
-            }
-          })
+          this.chatList = snapshot.docs
+            .map(doc => {
+              return {
+                id: doc.id,
+                ...doc.data()
+              }
+            })
+            .reverse()
+          if (this.stickBottom) this.$refs.scroller.scrollToBottom()
         }),
       this.roomRef
         .collection('chatList')
