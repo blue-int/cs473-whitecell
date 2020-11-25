@@ -118,6 +118,7 @@
           {{ item.displayName }}
           {{ item.msg }}
           {{ item.likes }}
+          <hr v-show="index !== chatList.length - 1 || hasScroll === false" />
           <!-- <div>개빡친다</div> -->
           <!-- <v-list-item @click="like(item)">
             <v-list-item-avatar
@@ -321,6 +322,7 @@ export default {
             })
             .reverse()
           if (this.stickBottom) this.$refs.scroller.scrollToBottom()
+          this.findScroll()
         }),
       this.roomRef
         .collection('chatList')
@@ -342,6 +344,7 @@ export default {
             .slice(0, 2)
           clearInterval(this.stopDecay)
           this.stopDecay = this.decay()
+          this.findScroll()
         }),
       this.roomRef.collection('viewers').onSnapshot(snapshot => {
         this.viewers = snapshot.size
@@ -374,9 +377,13 @@ export default {
       }
     }
   },
-  updated() {
-    const chatBox = this.$el.querySelector('.chat-box')
-    this.$nextTick(() => {
+  destroyed() {
+    clearInterval(this.stopDecay)
+    this.unsubList.forEach(unsub => unsub())
+  },
+  methods: {
+    findScroll() {
+      const chatBox = this.$el.querySelector('.chat-box')
       const scrollHeight = chatBox.scrollHeight
       const clientHeight = chatBox.clientHeight
       if (scrollHeight > clientHeight) {
@@ -384,13 +391,7 @@ export default {
       } else {
         this.hasScroll = false
       }
-    })
-  },
-  destroyed() {
-    clearInterval(this.stopDecay)
-    this.unsubList.forEach(unsub => unsub())
-  },
-  methods: {
+    },
     renderGauge(pin) {
       return (window.innerWidth * (pin.estEndTime - pin.currentTime)) / 15
     },
