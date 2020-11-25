@@ -114,6 +114,7 @@ export default {
     showDummy() {
       clearInterval(this.stopDummy)
       const tempDummies = dummyChats.slice()
+      let i = 0
       this.stopDummy = setInterval(() => {
         const dummy = tempDummies.shift()
         if (dummy === undefined) {
@@ -122,6 +123,7 @@ export default {
           })
           return clearInterval(this.stopDummy)
         }
+        if (i++ % 2 == 1) return
         this.roomRef.collection('chatList').add({
           timeCreated: firebase.firestore.FieldValue.serverTimestamp(),
           ...dummy
