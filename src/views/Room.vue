@@ -185,10 +185,10 @@ export default {
   right: 0;
   z-index: 10;
   &.dummy {
-    bottom: 100px;
+    bottom: 144px;
   }
   &.stop {
-    bottom: 56px;
+    bottom: 100px;
   }
 }
 .float-toolbar {

@@ -177,6 +177,20 @@
         />
       </v-toolbar>
     </v-card>
+
+    <v-btn
+      class="ma-3 float-btn arrow"
+      elevation="12"
+      fab
+      dark
+      x-small
+      color="#3e7495"
+      @click="goDown()"
+    >
+      <v-icon dark>
+        arrow_downward
+      </v-icon>
+    </v-btn>
   </v-container>
 </template>
 
@@ -234,7 +248,6 @@ export default {
     this.unsubList = [
       this.roomRef
         .collection('chatList')
-        .limit(200)
         .orderBy('timeCreated', 'desc')
         .onSnapshot(snapshot => {
           this.chatList = snapshot.docs
@@ -306,6 +319,10 @@ export default {
     this.unsubList.forEach(unsub => unsub())
   },
   methods: {
+    goDown() {
+      this.stickBottom = true
+      this.$refs.scroller.scrollToBottom()
+    },
     findScroll() {
       const chatBox = this.$el.querySelector('.chat-box')
       const scrollHeight = chatBox.scrollHeight
@@ -523,16 +540,13 @@ export default {
 .menu-btn {
   margin-right: -16px;
 }
-.flip-list-enter-active,
-.flip-list-leave-active {
-  transition: all 1s;
-}
-.flip-list-enter,
-.flip-list-leave-to {
-  opacity: 0;
-  transform: translateY(30px);
-}
-.flip-list-move {
-  transition: transform 0.1s;
+
+.float-btn {
+  position: fixed;
+  right: 0;
+  z-index: 10;
+  &.arrow {
+    bottom: 56px;
+  }
 }
 </style>
