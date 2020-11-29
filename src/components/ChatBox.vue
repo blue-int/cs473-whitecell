@@ -527,9 +527,11 @@ export default {
               `You banned ${banCount} viewers including ${targetChat.displayName}!!`
             )
           } else if (targetChat.uid === 'dummy') {
-            alert(`You banned only ${targetChat.displayName}!!`)
+            alert(`You banned the dummy user ${targetChat.displayName}!!`)
           } else {
-            alert('Nobody has been banned: Did you try to ban yourself?')
+            alert(
+              `Nobody was banned: The user ${targetChat.displayName} is already banned.`
+            )
           }
         })
         .catch(e => console.log(e))
