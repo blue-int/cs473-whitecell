@@ -249,6 +249,7 @@ export default {
       this.roomRef
         .collection('chatList')
         .orderBy('timeCreated', 'desc')
+        .limit(100)
         .onSnapshot(snapshot => {
           this.chatList = snapshot.docs
             .map(doc => {
@@ -308,9 +309,47 @@ export default {
           Math.round(chatBox.scrollTop + chatBox.clientHeight) >
         1
       ) {
+        if (this.stickBottom === false) return
         this.stickBottom = false
+        const unsub = this.roomRef
+          .collection('chatList')
+          .orderBy('timeCreated', 'desc')
+          .endAt(this.chatList[0].timeCreated)
+          .onSnapshot(snapshot => {
+            this.chatList = snapshot.docs
+              .map(doc => {
+                return {
+                  id: doc.id,
+                  ...doc.data()
+                }
+              })
+              .reverse()
+            if (this.stickBottom) this.$refs.scroller.scrollToBottom()
+            this.findScroll()
+          })
+        this.unsubList[0]()
+        this.unsubList[0] = unsub
       } else {
+        if (this.stickBottom === true) return
         this.stickBottom = true
+        const unsub = this.roomRef
+          .collection('chatList')
+          .orderBy('timeCreated', 'desc')
+          .limit(100)
+          .onSnapshot(snapshot => {
+            this.chatList = snapshot.docs
+              .map(doc => {
+                return {
+                  id: doc.id,
+                  ...doc.data()
+                }
+              })
+              .reverse()
+            if (this.stickBottom) this.$refs.scroller.scrollToBottom()
+            this.findScroll()
+          })
+        this.unsubList[0]()
+        this.unsubList[0] = unsub
       }
     }
   },
@@ -320,7 +359,6 @@ export default {
   },
   methods: {
     goDown() {
-      this.stickBottom = true
       this.$refs.scroller.scrollToBottom()
     },
     findScroll() {
@@ -351,7 +389,7 @@ export default {
         deleted: false,
         havebeenPinned: false
       })
-      this.stickBottom = true
+      this.goDown()
       this.text = ''
     },
     like(chat) {
@@ -372,7 +410,7 @@ export default {
         })
       clearTimeout(this.jumpBottom)
       this.jumpBottom = setTimeout(() => {
-        this.stickBottom = true
+        this.goDown()
 
         const chatBox = this.$el.querySelector('.chat-box')
         chatBox.scrollTop = chatBox.scrollHeight
