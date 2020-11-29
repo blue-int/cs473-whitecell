@@ -103,7 +103,6 @@
           :active="active"
           :data-index="index"
           class="chat"
-          @click.native="like(item)"
         >
           <v-list-item @click="like(item)">
             <v-list-item-avatar
