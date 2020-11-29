@@ -474,9 +474,19 @@ export default {
         return
       }
 
+      const chatRef = this.roomRef.collection('chatList').doc(targetChat.id)
+      chatRef.update({
+        msg: 'This message has deleted',
+        likes: 0,
+        pinned: false,
+        deleted: true,
+        fans: firebase.firestore.FieldValue.arrayRemove(this.hostUid)
+      })
+
       this.roomRef.update({
         banListUid: firebase.firestore.FieldValue.arrayUnion(targetChat.uid)
       })
+      alert(`You banned ${targetChat.displayName}!!`)
     },
 
     banChat(targetChat) {
@@ -507,25 +517,19 @@ export default {
             ...targetChat.fans,
             targetChat.uid
           ])
-        ]
-        const hostIndex = mergedBanList.indexOf(this.hostUid)
-        if (hostIndex !== -1) {
-          mergedBanList.splice(hostIndex, 1)
-        }
+        ].filter(uid => uid !== this.hostUid)
         banCount = mergedBanList.length - room.data().banListUid.length
         return transaction.update(this.roomRef, { banListUid: mergedBanList })
       })
         .then(() => {
-          if (targetChat.uid === 'dummy') {
+          if (banCount !== 0) {
             alert(
-              'You banned ' +
-                (targetChat.likes + 1 + Math.floor(Math.random() * 10)) +
-                ' viewers!!'
+              `You banned ${banCount} viewers including ${targetChat.displayName}!!`
             )
-          } else if (banCount !== 0) {
-            alert('You banned ' + banCount + ' viewers!!')
+          } else if (targetChat.uid === 'dummy') {
+            alert(`You banned only ${targetChat.displayName}!!`)
           } else {
-            alert('Nobody has banned: Did you try to ban yourself?')
+            alert('Nobody has been banned: Did you try to ban yourself?')
           }
         })
         .catch(e => console.log(e))
