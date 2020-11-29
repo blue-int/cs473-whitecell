@@ -413,7 +413,7 @@ export default {
 
         const chatBox = this.$el.querySelector('.chat-box')
         chatBox.scrollTop = chatBox.scrollHeight
-      }, 1000)
+      }, 3000)
     },
     pinned(chat) {
       if (chat.likes < 5) return false
