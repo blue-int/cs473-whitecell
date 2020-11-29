@@ -89,22 +89,12 @@ export default {
       this.title = doc.data().title
       this.hostName = doc.data().hostName
       this.hostUid = doc.data().hostUid
+      this.viewers = doc.data().viewers
       if (doc.data().start === true) {
         this.$refs.plyr.player.play()
       }
     })
     this.unsubList.push(banSnapshot)
-  },
-  mounted() {
-    const viewerSnapshot = this.roomRef
-      .collection('viewers')
-      .onSnapshot(snapshot => {
-        this.viewers = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }))
-      })
-    this.unsubList.push(viewerSnapshot)
   },
   destroyed() {
     clearInterval(this.stopDummy)
@@ -139,7 +129,7 @@ export default {
     }
   },
 
-  beforeRouteEnter: (to, from, next) => {
+  beforeRouteEnter: async (to, from, next) => {
     const currentUser = firebase.auth().currentUser
     const userInfo = {
       displayName: currentUser.displayName,
@@ -148,29 +138,30 @@ export default {
       email: currentUser.email
     }
     const roomRef = db.collection('lobby').doc(to.params.id)
-
-    const batch = db.batch()
-    batch.update(roomRef, {
-      viewers: firebase.firestore.FieldValue.increment(1)
-    })
-    batch.set(roomRef.collection('viewers').doc(userInfo.uid), userInfo)
-    batch.commit()
+    const viewerRef = roomRef.collection('viewers').doc(userInfo.uid)
+    const doc = await viewerRef.get()
+    if (doc.exists === false) {
+      viewerRef.set(userInfo)
+      roomRef.update({
+        viewers: firebase.firestore.FieldValue.increment(1)
+      })
+    }
 
     next()
   },
   beforeRouteLeave: async (to, from, next) => {
     const roomRef = db.collection('lobby').doc(from.params.id)
+    const viewerRef = roomRef
+      .collection('viewers')
+      .doc(firebase.auth().currentUser.uid)
+    const doc = await viewerRef.get()
+    if (doc.exists) {
+      viewerRef.delete()
+      roomRef.update({
+        viewers: firebase.firestore.FieldValue.increment(-1)
+      })
+    }
 
-    const batch = db.batch()
-    batch.update(roomRef, {
-      viewers: firebase.firestore.FieldValue.increment(-1)
-    })
-    batch.delete(
-      roomRef.collection('viewers').doc(firebase.auth().currentUser.uid)
-    )
-    batch.commit().catch(() => {
-      // console.log('Stop Stream')
-    })
     next()
   }
 }
