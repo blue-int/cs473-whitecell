@@ -96,7 +96,7 @@ export default {
     })
     this.unsubList.push(banSnapshot)
   },
-  destroyed() {
+  beforeDestroy() {
     clearInterval(this.stopDummy)
     this.unsubList.forEach(unsub => unsub())
   },
@@ -124,6 +124,7 @@ export default {
       })
     },
     stopStream() {
+      this.unsubList.forEach(unsub => unsub())
       this.roomRef.delete()
       this.$router.push('/lobby')
     }
@@ -150,16 +151,20 @@ export default {
     next()
   },
   beforeRouteLeave: async (to, from, next) => {
-    const roomRef = db.collection('lobby').doc(from.params.id)
-    const viewerRef = roomRef
-      .collection('viewers')
-      .doc(firebase.auth().currentUser.uid)
-    const doc = await viewerRef.get()
-    if (doc.exists) {
-      viewerRef.delete()
-      roomRef.update({
-        viewers: firebase.firestore.FieldValue.increment(-1)
-      })
+    try {
+      const roomRef = db.collection('lobby').doc(from.params.id)
+      const viewerRef = roomRef
+        .collection('viewers')
+        .doc(firebase.auth().currentUser.uid)
+      const doc = await viewerRef.get()
+      if (doc.exists) {
+        viewerRef.delete()
+        await roomRef.update({
+          viewers: firebase.firestore.FieldValue.increment(-1)
+        })
+      }
+    } catch (e) {
+      if (e.code !== 'not-found') console.error(e)
     }
 
     next()
