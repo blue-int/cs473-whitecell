@@ -7,7 +7,7 @@
     >
       <div>
         <v-card-title class="px-0 py-2">
-          Live Chat
+          {{ title }}
         </v-card-title>
         <v-card-subtitle class="px-0 py-2">
           {{ viewers }} viewers
@@ -199,6 +199,10 @@ import firebase from 'firebase/app'
 export default {
   name: 'ChatBox',
   props: {
+    title: {
+      type: String,
+      default: ''
+    },
     hostUid: {
       type: String,
       default: ''

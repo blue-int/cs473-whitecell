@@ -24,18 +24,41 @@
       </div>
     </v-toolbar>
 
-    <v-btn
-      class="mx-3 my-6 float-btn"
-      elevation="12"
-      fab
-      dark
-      color="#3e7495"
-      @click="newRoom()"
-    >
-      <v-icon dark>
-        add
-      </v-icon>
-    </v-btn>
+    <v-dialog v-model="dialog" @click:outside="$refs.form.resetValidation()">
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn
+          elevation="12"
+          fab
+          dark
+          color="#3e7495"
+          class="mx-3 my-6 float-btn"
+          v-bind="attrs"
+          v-on="on"
+        >
+          <v-icon dark>
+            add
+          </v-icon>
+        </v-btn>
+      </template>
+      <v-card>
+        <v-card-title>
+          Stream Information
+        </v-card-title>
+        <v-card-text>
+          <v-form ref="form" v-model="valid" lazy-validation>
+            <v-text-field
+              v-model="title"
+              label="Stream Title"
+              :rules="titleRule"
+            ></v-text-field>
+          </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn @click="dialog = false">Close</v-btn>
+          <v-btn @click="newRoom()">Start Stream</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <v-card
       v-for="room in roomList"
@@ -67,6 +90,13 @@ export default {
   name: 'Lobby',
   data() {
     return {
+      dialog: false,
+      valid: true,
+      title: '',
+      titleRule: [
+        v => !!v || 'Please type the title',
+        v => v.length <= 18 || 'The title should be less than 18 characters'
+      ],
       roomList: [],
       unsubscribe: null
     }
@@ -98,9 +128,11 @@ export default {
   },
   methods: {
     async newRoom() {
+      if (!this.$refs.form.validate()) return
+      this.dialog = false
       try {
         const newRoom = {
-          title: 'Hi everyone!',
+          title: this.title,
           hostName: firebase.auth().currentUser.displayName,
           hostUid: firebase.auth().currentUser.uid,
           banListUid: [],

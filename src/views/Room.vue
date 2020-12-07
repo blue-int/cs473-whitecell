@@ -37,7 +37,7 @@
         clear
       </v-icon>
     </v-btn>
-    <ChatBox :host-uid="hostUid" />
+    <ChatBox :host-uid="hostUid" :title="title" />
     <v-toolbar elevation="0" color="transparent" class="float-toolbar">
       <v-btn icon dark class="goBack-btn" @click="$router.push('/lobby')">
         <v-icon>arrow_back</v-icon>
