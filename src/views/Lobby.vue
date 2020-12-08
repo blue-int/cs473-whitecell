@@ -69,7 +69,7 @@
     >
       <v-img
         :aspect-ratio="16 / 9"
-        src="https://img.youtube.com/vi/bTqVqk7FSmY/maxresdefault.jpg"
+        src="https://lh4.googleusercontent.com/h0iYT5CIk54nBifzJXR_ZzCAyjhDFiDxOkSrg_e8H5VobsbNuwl1jB-bAKcrToc_hUk2s_ergKrwjQNLlKht=w1920-h969-rw"
       />
       <!-- <v-avatar color="primary" size="48"></v-avatar> -->
       <v-card-title class="pa-3">{{ room.title }}</v-card-title>
