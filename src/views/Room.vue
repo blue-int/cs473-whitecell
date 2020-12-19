@@ -2,13 +2,14 @@
   <v-container fluid class="pa-0 room-container">
     <v-responsive :aspect-ratio="16 / 9">
       <iframe
-        :src="`https://www.youtube.com/embed/${streamSrc}`"
+        :src="
+          `https://player.twitch.tv/?channel=flurry1989&parent=localhost&parent=cs473-whitecell.web.app`
+        "
         width="100%"
         height="100%"
         frameborder="0"
         allowfullscreen
         autoplay="1"
-        controls="0"
         fullscreen
         gyroscope
       ></iframe>
