@@ -399,34 +399,33 @@ export default {
       this.text = ''
     },
     async like(chat) {
-      // if (chat.fans.includes(this.currentUser.uid) === true) return
       if (chat.deleted) {
         alert('You can not give a like on the deleted message.')
         return
       }
 
       let chatRef = this.roomRef.collection('chatList').doc(chat.id)
-      chatRef.update({
-        likes: firebase.firestore.FieldValue.increment(1),
-        fans: firebase.firestore.FieldValue.arrayUnion(this.currentUser.uid),
-        pinned: this.pinned(chat),
-        lastUpdated: firebase.firestore.Timestamp.now()
-      })
-      // if (chat.fans.includes(this.currentUser.uid)) {
-      //   chatRef.update({
-      //     likes: firebase.firestore.FieldValue.increment(-1),
-      //     fans: firebase.firestore.FieldValue.arrayRemove(this.currentUser.uid),
-      //     pinned: this.pinned(chat),
-      //     lastUpdated: firebase.firestore.Timestamp.now()
-      //   })
-      // } else {
-      //   chatRef.update({
-      //     likes: firebase.firestore.FieldValue.increment(1),
-      //     fans: firebase.firestore.FieldValue.arrayUnion(this.currentUser.uid),
-      //     pinned: this.pinned(chat),
-      //     lastUpdated: firebase.firestore.Timestamp.now()
-      //   })
-      // }
+      // chatRef.update({
+      //   likes: firebase.firestore.FieldValue.increment(1),
+      //   fans: firebase.firestore.FieldValue.arrayUnion(this.currentUser.uid),
+      //   pinned: this.pinned(chat),
+      //   lastUpdated: firebase.firestore.Timestamp.now()
+      // })
+      if (chat.fans.includes(this.currentUser.uid)) {
+        chatRef.update({
+          likes: firebase.firestore.FieldValue.increment(-1),
+          fans: firebase.firestore.FieldValue.arrayRemove(this.currentUser.uid),
+          pinned: this.pinned(chat),
+          lastUpdated: firebase.firestore.Timestamp.now()
+        })
+      } else {
+        chatRef.update({
+          likes: firebase.firestore.FieldValue.increment(1),
+          fans: firebase.firestore.FieldValue.arrayUnion(this.currentUser.uid),
+          pinned: this.pinned(chat),
+          lastUpdated: firebase.firestore.Timestamp.now()
+        })
+      }
 
       clearTimeout(this.jumpBottom)
       this.jumpBottom = setTimeout(() => {
@@ -437,7 +436,7 @@ export default {
       }, 3000)
     },
     pinned(chat) {
-      if (chat.likes < 2) return false
+      if (chat.likes < 1) return false
       if (chat.pinned === true) return true
       if (
         this.estEndTime(chat) <
