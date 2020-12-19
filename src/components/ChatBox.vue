@@ -406,18 +406,22 @@ export default {
       }
 
       let chatRef = this.roomRef.collection('chatList').doc(chat.id)
-      let chatData = (await chatRef.get()).data()
-      if (chatData.fans.includes(this.currentUser.uid)) {
-        alert('You cannot like the same chat twice.')
-        return
+      if (chat.fans.includes(this.currentUser.uid)) {
+        chatRef.update({
+          likes: firebase.firestore.FieldValue.increment(-1),
+          fans: firebase.firestore.FieldValue.arrayRemove(this.currentUser.uid),
+          pinned: this.pinned(chat),
+          lastUpdated: firebase.firestore.Timestamp.now()
+        })
+      } else {
+        chatRef.update({
+          likes: firebase.firestore.FieldValue.increment(1),
+          fans: firebase.firestore.FieldValue.arrayUnion(this.currentUser.uid),
+          pinned: this.pinned(chat),
+          lastUpdated: firebase.firestore.Timestamp.now()
+        })
       }
 
-      chatRef.update({
-        likes: firebase.firestore.FieldValue.increment(1),
-        fans: firebase.firestore.FieldValue.arrayUnion(this.currentUser.uid),
-        pinned: this.pinned(chat),
-        lastUpdated: firebase.firestore.Timestamp.now()
-      })
       clearTimeout(this.jumpBottom)
       this.jumpBottom = setTimeout(() => {
         this.goDown()
@@ -427,7 +431,7 @@ export default {
       }, 3000)
     },
     pinned(chat) {
-      if (chat.likes < 5) return false
+      if (chat.likes < 3) return false
       if (chat.pinned === true) return true
       if (
         this.estEndTime(chat) <
@@ -446,7 +450,7 @@ export default {
       }
     },
     estEndTime(chat) {
-      const likeWeight = 4
+      const likeWeight = 10
       const timeBias = 12
       if (
         likeWeight * chat.likes +
