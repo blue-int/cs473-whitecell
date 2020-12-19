@@ -210,6 +210,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       pinList: [],
       chatList: [],
       unsubList: [],
@@ -399,6 +400,8 @@ export default {
       this.text = ''
     },
     async like(chat) {
+      if (this.loading) return
+      this.loading = true
       if (chat.deleted) {
         alert('You can not give a like on the deleted message.')
         return
@@ -412,14 +415,14 @@ export default {
       //   lastUpdated: firebase.firestore.Timestamp.now()
       // })
       if (chat.fans.includes(this.currentUser.uid)) {
-        chatRef.update({
+        await chatRef.update({
           likes: firebase.firestore.FieldValue.increment(-1),
           fans: firebase.firestore.FieldValue.arrayRemove(this.currentUser.uid),
           pinned: this.pinned(chat),
           lastUpdated: firebase.firestore.Timestamp.now()
         })
       } else {
-        chatRef.update({
+        await chatRef.update({
           likes: firebase.firestore.FieldValue.increment(1),
           fans: firebase.firestore.FieldValue.arrayUnion(this.currentUser.uid),
           pinned: this.pinned(chat),
@@ -434,6 +437,7 @@ export default {
         const chatBox = this.$el.querySelector('.chat-box')
         chatBox.scrollTop = chatBox.scrollHeight
       }, 3000)
+      this.loading = false
     },
     pinned(chat) {
       if (chat.likes < 1) return false
