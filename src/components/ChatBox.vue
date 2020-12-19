@@ -218,6 +218,7 @@ export default {
       stopDecay: null,
       numLike: 0,
       numPinned: 0,
+      maxTime: 15,
       stickBottom: true,
       hasScroll: false,
       jumpBottom: null,
@@ -375,7 +376,9 @@ export default {
       }
     },
     renderGauge(pin) {
-      return (window.innerWidth * (pin.estEndTime - pin.currentTime)) / 15
+      return (
+        (window.innerWidth * (pin.estEndTime - pin.currentTime)) / this.maxTime
+      )
     },
     send(event) {
       event.target.blur()
@@ -395,22 +398,26 @@ export default {
       this.goDown()
       this.text = ''
     },
-    like(chat) {
+    async like(chat) {
       // if (chat.fans.includes(this.currentUser.uid) === true) return
       if (chat.deleted) {
         alert('You can not give a like on the deleted message.')
         return
       }
 
-      this.roomRef
-        .collection('chatList')
-        .doc(chat.id)
-        .update({
-          likes: firebase.firestore.FieldValue.increment(1),
-          fans: firebase.firestore.FieldValue.arrayUnion(this.currentUser.uid),
-          pinned: this.pinned(chat),
-          lastUpdated: firebase.firestore.Timestamp.now()
-        })
+      let chatRef = this.roomRef.collection('chatList').doc(chat.id)
+      let chatData = (await chatRef.get()).data()
+      if (chatData.fans.includes(this.currentUser.uid)) {
+        alert('You cannot like the same chat twice.')
+        return
+      }
+
+      chatRef.update({
+        likes: firebase.firestore.FieldValue.increment(1),
+        fans: firebase.firestore.FieldValue.arrayUnion(this.currentUser.uid),
+        pinned: this.pinned(chat),
+        lastUpdated: firebase.firestore.Timestamp.now()
+      })
       clearTimeout(this.jumpBottom)
       this.jumpBottom = setTimeout(() => {
         this.goDown()
@@ -439,13 +446,21 @@ export default {
       }
     },
     estEndTime(chat) {
+      const likeWeight = 4
+      const timeBias = 12
       if (
-        2 * chat.likes + chat.timeCreated.toMillis() / 1000 - 10 >
-        chat.lastUpdated.toMillis() / 1000 + 15
+        likeWeight * chat.likes +
+          chat.timeCreated.toMillis() / 1000 -
+          timeBias >
+        chat.lastUpdated.toMillis() / 1000 + this.maxTime
       ) {
-        return chat.lastUpdated.toMillis() / 1000 + 15
+        return chat.lastUpdated.toMillis() / 1000 + this.maxTime
       } else {
-        return 2 * chat.likes + chat.timeCreated.toMillis() / 1000 - 10
+        return (
+          likeWeight * chat.likes +
+          chat.timeCreated.toMillis() / 1000 -
+          timeBias
+        )
       }
     },
     decay() {
