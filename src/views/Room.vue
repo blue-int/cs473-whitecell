@@ -1,14 +1,18 @@
 <template>
   <v-container fluid class="pa-0 room-container">
-    <vue-plyr ref="plyr">
-      <video controls playsinline>
-        <source
-          size="1080"
-          src="https://clips-media-assets2.twitch.tv/40278264606-offset-4760.mp4"
-          type="video/mp4"
-        />
-      </video>
-    </vue-plyr>
+    <v-responsive :aspect-ratio="16 / 9">
+      <iframe
+        :src="`https://www.youtube.com/embed/${streamSrc}`"
+        width="100%"
+        height="100%"
+        frameborder="0"
+        allowfullscreen
+        autoplay="1"
+        controls="0"
+        fullscreen
+        gyroscope
+      ></iframe>
+    </v-responsive>
     <v-btn
       v-if="hostUid === currentUser.uid"
       class="ma-3 float-btn dummy"
@@ -59,6 +63,7 @@ export default {
   data() {
     return {
       title: '',
+      streamSrc: '',
       hostName: '',
       hostUid: null,
       viewers: [],
@@ -87,6 +92,7 @@ export default {
         this.$router.push('/lobby')
       }
       this.title = doc.data().title
+      this.streamSrc = doc.data().streamSrc
       this.hostName = doc.data().hostName
       this.hostUid = doc.data().hostUid
       this.viewers = doc.data().viewers

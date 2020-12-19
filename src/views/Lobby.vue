@@ -50,7 +50,14 @@
               v-model="title"
               label="Stream Title"
               :rules="titleRule"
-            ></v-text-field>
+            />
+
+            <v-text-field
+              v-model="streamSrc"
+              label="Stream Source"
+              hint="Please insert id of your stream: ex)https://youtu.be/{id}"
+              persistent-hint
+            />
           </v-form>
         </v-card-text>
         <v-card-actions>
@@ -97,6 +104,7 @@ export default {
         v => !!v || 'Please type the title',
         v => v.length <= 18 || 'The title should be less than 18 characters'
       ],
+      streamSrc: '',
       roomList: [],
       unsubscribe: null
     }
@@ -133,6 +141,7 @@ export default {
       try {
         const newRoom = {
           title: this.title,
+          streamSrc: this.streamSrc,
           hostName: firebase.auth().currentUser.displayName,
           hostUid: firebase.auth().currentUser.uid,
           banListUid: [],
