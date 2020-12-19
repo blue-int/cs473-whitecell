@@ -3,7 +3,7 @@
     <v-responsive :aspect-ratio="16 / 9">
       <iframe
         :src="
-          `https://player.twitch.tv/?channel=flurry1989&parent=localhost&parent=cs473-whitecell.web.app`
+          `https://player.twitch.tv/?channel=${channel}&parent=localhost&parent=cs473-whitecell.web.app`
         "
         width="100%"
         height="100%"
@@ -64,7 +64,7 @@ export default {
   data() {
     return {
       title: '',
-      streamSrc: '',
+      channel: '',
       hostName: '',
       hostUid: null,
       viewers: [],
@@ -93,7 +93,7 @@ export default {
         this.$router.push('/lobby')
       }
       this.title = doc.data().title
-      this.streamSrc = doc.data().streamSrc
+      this.channel = doc.data().channel
       this.hostName = doc.data().hostName
       this.hostUid = doc.data().hostUid
       this.viewers = doc.data().viewers

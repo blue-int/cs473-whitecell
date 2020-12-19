@@ -53,9 +53,9 @@
             />
 
             <v-text-field
-              v-model="streamSrc"
-              label="Stream Source"
-              hint="Please insert id of your stream: ex)https://youtu.be/{id}"
+              v-model="channel"
+              label="Stream Channel"
+              hint="Please insert your channel name: ex)https://twitch.tv/{name}"
               persistent-hint
             />
           </v-form>
@@ -104,7 +104,7 @@ export default {
         v => !!v || 'Please type the title',
         v => v.length <= 18 || 'The title should be less than 18 characters'
       ],
-      streamSrc: '',
+      channel: '',
       roomList: [],
       unsubscribe: null
     }
@@ -141,7 +141,7 @@ export default {
       try {
         const newRoom = {
           title: this.title,
-          streamSrc: this.streamSrc,
+          channel: this.channel,
           hostName: firebase.auth().currentUser.displayName,
           hostUid: firebase.auth().currentUser.uid,
           banListUid: [],
