@@ -377,8 +377,8 @@ export default {
     renderGauge(pin) {
       return (window.innerWidth * (pin.estEndTime - pin.currentTime)) / 15
     },
-    send(event) {
-      event.target.blur()
+    send() {
+      // event.target.blur()
       if (this.text.length == 0) return
       this.roomRef.collection('chatList').add({
         uid: this.currentUser.uid,
